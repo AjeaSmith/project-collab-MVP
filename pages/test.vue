@@ -1,4 +1,5 @@
 <script setup>
+import { useAppwrite } from "nuxt-appwrite";
 const { account, ID } = useAppwrite();
 
 const loggedInUser = ref(null);

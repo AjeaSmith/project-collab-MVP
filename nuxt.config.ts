@@ -6,7 +6,7 @@ export default defineNuxtConfig({
 		endpoint: process.env.PUBLIC_APPWRITE_ENDPOINT,
 		project: process.env.PUBLIC_APPWRITE_PROJECT,
 	},
-	modules: ["nuxt-appwrite", "shadcn-nuxt"],
+	modules: ["nuxt-appwrite", "shadcn-nuxt", "@nuxtjs/tailwindcss"],
 	shadcn: {
 		/**
 		 * Prefix for all the imported component
