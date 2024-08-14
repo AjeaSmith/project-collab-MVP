@@ -1,4 +1,7 @@
 <template>
+	<!-- TODO: make it responsive -->
+	<!-- TODO: show search bar inside menu on mobile devices -->
+	<!-- TODO: make menu items more appealing looking on mobile? -->
 	<header class="bg-white shadow">
 		<div class="container mx-auto px-4 flex justify-between items-center py-4">
 			<!-- Logo -->

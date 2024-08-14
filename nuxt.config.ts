@@ -2,11 +2,11 @@
 export default defineNuxtConfig({
 	compatibilityDate: "2024-04-03",
 	devtools: { enabled: true },
+	modules: ["nuxt-appwrite", "shadcn-nuxt", "@nuxtjs/tailwindcss"],
 	appwrite: {
 		endpoint: process.env.PUBLIC_APPWRITE_ENDPOINT,
 		project: process.env.PUBLIC_APPWRITE_PROJECT,
 	},
-	modules: ["nuxt-appwrite", "shadcn-nuxt", "@nuxtjs/tailwindcss"],
 	shadcn: {
 		/**
 		 * Prefix for all the imported component
