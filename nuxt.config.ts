@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
 	compatibilityDate: "2024-04-03",
 	devtools: { enabled: true },
-	modules: ["nuxt-appwrite", "shadcn-nuxt", "@nuxtjs/tailwindcss"],
+	modules: ["nuxt-appwrite", "shadcn-nuxt", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
 	appwrite: {
 		endpoint: process.env.PUBLIC_APPWRITE_ENDPOINT,
 		project: process.env.PUBLIC_APPWRITE_PROJECT,
