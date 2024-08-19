@@ -1,7 +1,4 @@
 <template>
-	<!-- TODO: make it responsive -->
-	<!-- TODO: show search bar inside menu on mobile devices -->
-	<!-- TODO: make menu items more appealing looking on mobile? -->
 	<header class="bg-white shadow">
 		<div class="container mx-auto px-4 flex justify-between items-center py-4">
 			<!-- Logo -->
@@ -31,45 +28,42 @@
 			<!-- Navigation Links -->
 			<nav
 				:class="{ block: isMobileMenuOpen, hidden: !isMobileMenuOpen }"
-				class="lg:flex space-x-6 absolute lg:relative top-[9%] left-0 w-full bg-white lg:w-auto lg:bg-transparent lg:space-x-6 lg:flex-row flex-col"
+				class="px-4 py-4 flex-col absolute top-[7%] left-0 w-full bg-white | lg:w-auto lg:bg-transparent lg:flex lg:relative lg:space-x-6 lg:flex-row lg:px-0 lg:py-0"
 			>
 				<NuxtLink
 					to="/explore"
-					class="block py-2 md:py-0 text-gray-600 hover:text-gray-900"
+					class="block py-2 text-gray-600 hover:text-gray-900"
 					>Explore Projects</NuxtLink
 				>
+
 				<NuxtLink
+					v-if="user.current.value"
 					to="/my-projects"
-					class="block py-2 md:py-0 text-gray-600 hover:text-gray-900"
+					class="block py-2 text-gray-600 hover:text-gray-900"
 					>My Projects</NuxtLink
 				>
 				<NuxtLink
 					to="/collaborators"
-					class="block py-2 md:py-0 text-gray-600 hover:text-gray-900"
+					class="block py-2 text-gray-600 hover:text-gray-900"
 					>Find Collaborators</NuxtLink
 				>
 				<NuxtLink
+					v-if="user.current.value"
 					to="/messages"
-					class="block py-2 md:py-0 text-gray-600 hover:text-gray-900"
+					class="block py-2 text-gray-600 hover:text-gray-900"
 					>Messages</NuxtLink
 				>
 				<NuxtLink
+					v-if="user.current.value"
 					to="/profile"
-					class="block py-2 md:py-0 text-gray-600 hover:text-gray-900"
+					class="block py-2 text-gray-600 hover:text-gray-900"
 					>Profile</NuxtLink
 				>
 			</nav>
-			<!-- Search Bar and User Menu -->
+			<!-- User Menu -->
 			<div class="flex items-center space-x-4">
-				<!-- Search Bar -->
-				<Input
-					type="text"
-					placeholder="Search Projects or Collaborators"
-					class="w-64"
-				/>
-
 				<!-- User Dropdown -->
-				<DropdownMenu>
+				<DropdownMenu v-if="user.current.value">
 					<DropdownMenuTrigger>
 						<Avatar>
 							<AvatarImage
@@ -84,9 +78,30 @@
 						<DropdownMenuItem href="/notifications"
 							>Notifications</DropdownMenuItem
 						>
-						<DropdownMenuItem href="/logout">Logout</DropdownMenuItem>
+						<div
+							v-if="user.current.value"
+							class="text-sm my-2 mx-2 text-blue-400"
+						>
+							{{ user.current.value.email }}
+						</div>
+						<template v-else>
+							<Loader2Icon class="animate-spin h-5 w-5 mx-auto" />
+						</template>
+						<DropdownMenuItem>
+							<button
+								@click="user.logout"
+								class="rounded-sm border-2 px-4 py-1 border-blue-500"
+							>
+								Log out
+							</button>
+						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
+				<NuxtLink
+					to="sign-in"
+					class="bg-slate-700 text-white hover:bg-white hover:text-slate-700 border-2 border-slate-800 px-2.5 py-1 rounded-sm"
+					>Sign in to Create Project</NuxtLink
+				>
 			</div>
 		</div>
 	</header>
@@ -102,7 +117,16 @@ import {
 	DropdownMenuTrigger,
 	DropdownMenuContent,
 } from "./ui/dropdown-menu";
+import { useUserSession } from "~/composable/useUserSession";
+import { Loader2Icon } from "lucide-vue-next";
+import { Button } from "./ui/button";
 
 // State to manage mobile menu visibility
 const isMobileMenuOpen = ref(false);
+
+const user = useUserSession();
+
+onMounted(async () => {
+	// user.fetchCurrentUser();
+});
 </script>

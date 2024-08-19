@@ -44,7 +44,7 @@
 		</section> -->
 
 		<!-- Categories Overview Section -->
-		<section class="py-12 bg-gray-100">
+		<!-- <section class="py-12 bg-gray-100">
 			<div class="container mx-auto">
 				<h2 class="text-3xl font-bold text-gray-800 mb-6">Categories</h2>
 				<div
@@ -65,13 +65,13 @@
 					</Card>
 				</div>
 			</div>
-		</section>
+		</section> -->
 
 		<!-- Call to Action Section -->
 		<section class="py-12">
 			<div class="container mx-auto text-center">
 				<h2 class="text-3xl font-bold text-gray-800 mb-6">Join a Project</h2>
-				<Button variant="primary" size="lg">Find Collaborators</Button>
+				<Button size="lg">Find Collaborators</Button>
 			</div>
 		</section>
 	</div>
@@ -81,8 +81,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Header from "~/components/Header.vue";
-
-// import { Button, Card } from '@shadcn/ui';
 
 const featuredProjects = [
 	{
