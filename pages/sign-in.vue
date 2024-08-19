@@ -4,6 +4,6 @@
 
 <script setup>
 definePageMeta({
-	middleware: "is-authenticated",
+	middleware: "check-session",
 });
 </script>

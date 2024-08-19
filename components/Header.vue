@@ -37,7 +37,7 @@
 				>
 
 				<NuxtLink
-					v-if="user.current.value"
+					v-if="user.current"
 					to="/my-projects"
 					class="block py-2 text-gray-600 hover:text-gray-900"
 					>My Projects</NuxtLink
@@ -48,68 +48,73 @@
 					>Find Collaborators</NuxtLink
 				>
 				<NuxtLink
-					v-if="user.current.value"
+					v-if="user.current"
 					to="/messages"
 					class="block py-2 text-gray-600 hover:text-gray-900"
 					>Messages</NuxtLink
 				>
 				<NuxtLink
-					v-if="user.current.value"
+					v-if="user.current"
 					to="/profile"
 					class="block py-2 text-gray-600 hover:text-gray-900"
 					>Profile</NuxtLink
 				>
 			</nav>
 			<!-- User Menu -->
-			<div class="flex items-center space-x-4">
-				<!-- User Dropdown -->
-				<DropdownMenu v-if="user.current.value">
-					<DropdownMenuTrigger>
-						<Avatar>
-							<AvatarImage
-								src="https://github.com/radix-vue.png"
-								alt="@radix-vue"
-								class="cursor-pointer"
-							/>
-							<AvatarFallback>CN</AvatarFallback>
-						</Avatar>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent class="w-48">
-						<DropdownMenuItem href="/notifications"
-							>Notifications</DropdownMenuItem
+			<ClientOnly>
+				<div class="flex items-center space-x-4">
+					<!-- User Dropdown -->
+					<template v-if="user.isAuthenticated">
+						<DropdownMenu>
+							<DropdownMenuTrigger>
+								<Avatar>
+									<AvatarImage
+										src="https://github.com/radix-vue.png"
+										alt="@radix-vue"
+										class="cursor-pointer"
+									/>
+									<AvatarFallback>CN</AvatarFallback>
+								</Avatar>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent class="w-48">
+								<DropdownMenuItem href="/notifications"
+									>Notifications</DropdownMenuItem
+								>
+								<div
+									v-if="user.current"
+									class="text-sm my-2 mx-2 text-blue-400"
+								>
+									{{ user.current.email }}
+								</div>
+								<template v-else>
+									<Loader2Icon class="animate-spin h-5 w-5 mx-auto" />
+								</template>
+								<DropdownMenuItem>
+									<button
+										@click="user.logout"
+										class="rounded-sm border-2 px-4 py-1 border-blue-500"
+									>
+										Log out
+									</button>
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</template>
+					<template v-else>
+						<NuxtLink
+							to="sign-in"
+							class="bg-slate-700 text-white hover:bg-white hover:text-slate-700 border-2 border-slate-800 px-2.5 py-2 rounded-sm"
+							>Sign in to Create Project</NuxtLink
 						>
-						<div
-							v-if="user.current.value"
-							class="text-sm my-2 mx-2 text-blue-400"
-						>
-							{{ user.current.value.email }}
-						</div>
-						<template v-else>
-							<Loader2Icon class="animate-spin h-5 w-5 mx-auto" />
-						</template>
-						<DropdownMenuItem>
-							<button
-								@click="user.logout"
-								class="rounded-sm border-2 px-4 py-1 border-blue-500"
-							>
-								Log out
-							</button>
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-				<NuxtLink
-					to="sign-in"
-					class="bg-slate-700 text-white hover:bg-white hover:text-slate-700 border-2 border-slate-800 px-2.5 py-1 rounded-sm"
-					>Sign in to Create Project</NuxtLink
-				>
-			</div>
+					</template>
+				</div>
+			</ClientOnly>
 		</div>
 	</header>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
 	DropdownMenu,
@@ -117,16 +122,15 @@ import {
 	DropdownMenuTrigger,
 	DropdownMenuContent,
 } from "./ui/dropdown-menu";
-import { useUserSession } from "~/composable/useUserSession";
 import { Loader2Icon } from "lucide-vue-next";
-import { Button } from "./ui/button";
+import { useAuth } from "~/store/auth";
 
 // State to manage mobile menu visibility
 const isMobileMenuOpen = ref(false);
 
-const user = useUserSession();
+const user = useAuth();
 
 onMounted(async () => {
-	// user.fetchCurrentUser();
+	user.fetchCurrentUser();
 });
 </script>

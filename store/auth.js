@@ -1,12 +1,15 @@
-import { ref } from "vue";
-import { account } from "../appwrite";
+import { defineStore } from "pinia";
+import { account } from "~/appwrite";
 import { createUserAccount, signInAccount } from "~/lib/appwrite/api";
 
-export const useUserSession = () => {
+export const useAuth = defineStore("auth", () => {
+	// ---- PROPERTIES -----
 	const loading = ref(false);
 	const error = ref(null);
-	const current = useState("currentUser", () => null);
+	const current = ref(null);
+	const isAuthenticated = ref(false);
 
+	// ---- ACTIONS -----
 	const register = async (userData) => {
 		loading.value = true;
 		try {
@@ -37,6 +40,7 @@ export const useUserSession = () => {
 			await signInAccount(userData);
 			loading.value = false;
 			navigateTo("/");
+			isAuthenticated.value = true;
 		} catch (err) {
 			switch (err.type) {
 				case "user_session_already_exists":
@@ -58,6 +62,7 @@ export const useUserSession = () => {
 	const logout = async () => {
 		await account.deleteSession("current"); // Delete Appwrite user session
 		current.value = null; // Clear current ref
+		isAuthenticated.value = false;
 		navigateTo("sign-in");
 	};
 
@@ -74,9 +79,10 @@ export const useUserSession = () => {
 		current,
 		error,
 		loading,
+		isAuthenticated,
 		fetchCurrentUser,
 		login,
 		logout,
 		register,
 	};
-};
+});
