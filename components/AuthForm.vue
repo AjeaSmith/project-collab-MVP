@@ -14,8 +14,8 @@
 				{{ type === "sign-up" ? "Sign up" : "Sign in" }}
 			</h2>
 
-			<div v-if="user.error.value" class="text-red-500 text-center mb-2">
-				{{ user.error.value }}
+			<div v-if="user.error" class="text-red-500 text-center mb-2">
+				{{ user.error }}
 			</div>
 
 			<!-- Auth Form -->
@@ -87,11 +87,9 @@
 				</template>
 
 				<!-- login Button -->
-				<Button type="submit" class="w-full" :disabled="user.loading.value">
+				<Button type="submit" class="w-full" :disabled="user.loading">
 					<div
-						v-if="
-							(type === 'sign-up' || type === 'sign-in') && user.loading.value
-						"
+						v-if="(type === 'sign-up' || type === 'sign-in') && user.loading"
 						class="flex items-center"
 					>
 						<Loader2Icon class="animate-spin h-5 w-5 mr-2" />
@@ -143,10 +141,10 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useUserSession } from "~/composable/useUserSession";
 import { Loader2Icon } from "lucide-vue-next";
+import { useAuth } from "~/store/auth";
 
-const user = useUserSession();
+const user = useAuth();
 
 // * conditonally render fields based on which form type is being used
 const formSchema = toTypedSchema(

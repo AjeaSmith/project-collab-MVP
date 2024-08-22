@@ -1,7 +1,9 @@
 <template>
-	<ConfigProvider :useId="useIdFunction">
-		<NuxtPage />
-	</ConfigProvider>
+	<NuxtLayout>
+		<ConfigProvider :useId="useIdFunction">
+			<NuxtPage />
+		</ConfigProvider>
+	</NuxtLayout>
 </template>
 
 <script setup>

@@ -1,80 +1,90 @@
 <template>
-	<header class="bg-white shadow">
-		<div class="container mx-auto px-4 flex justify-between items-center py-4">
-			<!-- Logo -->
-			<a href="/" class="text-2xl font-bold text-gray-800">CreativeCollab</a>
-
-			<!-- Mobile Menu Button -->
-			<button
-				@click="isMobileMenuOpen = !isMobileMenuOpen"
-				class="lg:hidden text-gray-800 focus:outline-none"
-				aria-label="Toggle Menu"
+	<ClientOnly>
+		<header class="bg-white shadow">
+			<div
+				class="container mx-auto px-4 flex justify-between items-center py-4"
 			>
-				<svg
-					class="w-6 h-6"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
+				<!-- Logo -->
+				<a href="/" class="text-2xl font-bold text-gray-800">CreativeCollab</a>
+				<!-- Mobile Menu Button -->
+				<button
+					@click="isMobileMenuOpen = !isMobileMenuOpen"
+					class="lg:hidden text-gray-800 focus:outline-none"
+					aria-label="Toggle Menu"
 				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M4 6h16M4 12h16m-7 6h7"
-					></path>
-				</svg>
-			</button>
-			<!-- Navigation Links -->
-			<nav
-				:class="{ block: isMobileMenuOpen, hidden: !isMobileMenuOpen }"
-				class="px-4 py-4 flex-col absolute top-[7%] left-0 w-full bg-white | lg:w-auto lg:bg-transparent lg:flex lg:relative lg:space-x-6 lg:flex-row lg:px-0 lg:py-0"
-			>
-				<NuxtLink
-					to="/explore"
-					class="block py-2 text-gray-600 hover:text-gray-900"
-					>Explore Projects</NuxtLink
+					<svg
+						class="w-6 h-6"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M4 6h16M4 12h16m-7 6h7"
+						></path>
+					</svg>
+				</button>
+				<!-- Navigation Links -->
+				<nav
+					:class="{ block: isMobileMenuOpen, hidden: !isMobileMenuOpen }"
+					class="px-4 py-4 flex-col absolute top-[7%] left-0 w-full bg-white | lg:w-auto lg:bg-transparent lg:flex lg:relative lg:space-x-6 lg:flex-row lg:px-0 lg:py-0"
 				>
-
-				<NuxtLink
-					v-if="user.current"
-					to="/my-projects"
-					class="block py-2 text-gray-600 hover:text-gray-900"
-					>My Projects</NuxtLink
-				>
-				<NuxtLink
-					to="/collaborators"
-					class="block py-2 text-gray-600 hover:text-gray-900"
-					>Find Collaborators</NuxtLink
-				>
-				<NuxtLink
-					v-if="user.current"
-					to="/messages"
-					class="block py-2 text-gray-600 hover:text-gray-900"
-					>Messages</NuxtLink
-				>
-				<NuxtLink
-					v-if="user.current"
-					to="/profile"
-					class="block py-2 text-gray-600 hover:text-gray-900"
-					>Profile</NuxtLink
-				>
-			</nav>
-			<!-- User Menu -->
-			<ClientOnly>
+					<NuxtLink
+						to="/explore"
+						class="block py-2 text-gray-600 hover:text-gray-900"
+						>Explore Projects</NuxtLink
+					>
+					<!-- <div v-if="user.current">{{ user.current }}</div> -->
+					<NuxtLink
+						v-if="user.isAuthenticated"
+						to="/my-projects"
+						class="block py-2 text-gray-600 hover:text-gray-900"
+						>My Projects</NuxtLink
+					>
+					<NuxtLink
+						to="/collaborators"
+						class="block py-2 text-gray-600 hover:text-gray-900"
+						>Find Collaborators</NuxtLink
+					>
+					<NuxtLink
+						v-if="user.isAuthenticated"
+						to="/messages"
+						class="block py-2 text-gray-600 hover:text-gray-900"
+						>Messages</NuxtLink
+					>
+					<NuxtLink
+						v-if="user.isAuthenticated"
+						to="/profile"
+						class="block py-2 text-gray-600 hover:text-gray-900"
+						>Profile</NuxtLink
+					>
+				</nav>
+				<!-- User Menu -->
 				<div class="flex items-center space-x-4">
 					<!-- User Dropdown -->
 					<template v-if="user.isAuthenticated">
 						<DropdownMenu>
 							<DropdownMenuTrigger>
-								<Avatar>
-									<AvatarImage
-										src="https://github.com/radix-vue.png"
-										alt="@radix-vue"
-										class="cursor-pointer"
-									/>
-									<AvatarFallback>CN</AvatarFallback>
-								</Avatar>
+								<template v-if="user.current">
+									<Avatar>
+										<AvatarImage
+											:src="
+												user.current
+													? user.current.profile_image
+													: 'https://github.com/radix-vue.png'
+											"
+											alt="profile"
+											class="cursor-pointer"
+										/>
+										<AvatarFallback>CN</AvatarFallback>
+									</Avatar>
+								</template>
+								<template v-else>
+									<Loader2Icon class="animate-spin h-5 w-5 mx-auto" />
+								</template>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent class="w-48">
 								<DropdownMenuItem href="/notifications"
@@ -84,10 +94,10 @@
 									v-if="user.current"
 									class="text-sm my-2 mx-2 text-blue-400"
 								>
-									{{ user.current.email }}
+									{{ user.current.name }}
 								</div>
 								<template v-else>
-									<Loader2Icon class="animate-spin h-5 w-5 mx-auto" />
+									<Loader2Icon class="animate-spin size-9 mx-auto" />
 								</template>
 								<DropdownMenuItem>
 									<button
@@ -108,9 +118,9 @@
 						>
 					</template>
 				</div>
-			</ClientOnly>
-		</div>
-	</header>
+			</div>
+		</header>
+	</ClientOnly>
 </template>
 
 <script setup>
@@ -131,6 +141,8 @@ const isMobileMenuOpen = ref(false);
 const user = useAuth();
 
 onMounted(async () => {
-	user.fetchCurrentUser();
+	if (user.isAuthenticated) {
+		user.fetchCurrentUser();
+	}
 });
 </script>

@@ -21,7 +21,7 @@
 
 					<NuxtLink
 						v-else
-						to="create-project"
+						to="projects/new"
 						class="bg-white text-slate-700 border-2 border-slate-800 px-4 py-2 rounded-sm">
 						Create a Project
 					</NuxtLink>

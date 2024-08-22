@@ -11,7 +11,6 @@ export default defineNuxtRouteMiddleware((to) => {
 			authCookie !== undefined
 		) {
 			user.isAuthenticated = true;
-			// return navigateTo("/");
 		} else if (!authCookie) {
 			user.isAuthenticated = false;
 		}

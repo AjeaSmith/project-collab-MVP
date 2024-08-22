@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
 import { account } from "~/appwrite";
-import { createUserAccount, signInAccount } from "~/lib/appwrite/api";
+import {
+	createUserAccount,
+	getCurrentUser,
+	signInAccount,
+} from "~/lib/appwrite/api";
 
 export const useAuth = defineStore("auth", () => {
 	// ---- PROPERTIES -----
@@ -68,7 +72,7 @@ export const useAuth = defineStore("auth", () => {
 
 	const fetchCurrentUser = async () => {
 		try {
-			const currentUser = await account.get();
+			const currentUser = await getCurrentUser();
 			current.value = currentUser;
 		} catch (err) {
 			console.error("Failed to fetch session:", err);
