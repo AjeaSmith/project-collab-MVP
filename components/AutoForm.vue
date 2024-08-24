@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { AutoForm } from "@/components/ui/auto-form";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
+import { useProject } from "~/store/project";
+import { dataURLToBlob } from "blob-util";
+
+const project = useProject();
 
 const route = useRoute();
 
@@ -29,7 +33,7 @@ const schema = z.object({
 	category: z.string({
 		required_error: "Category is required.",
 	}),
-	status: z.enum(["open", "in progress"]).optional(),
+	status: z.enum(["open", "in progress"]),
 
 	file: z.string().optional(),
 });
@@ -38,61 +42,70 @@ const form = useForm({
 	validationSchema: toTypedSchema(schema),
 });
 
-onMounted(async () => {
-	projectId.value = route.params.id;
-	if (projectId.value) {
-		isEditMode.value = true;
-		form.setFieldValue("title", projectId.value);
-		// const project = await projectsStore.fetchProjectById(projectId.value);
-		// if (project) {
-		// 	form.title = project.title;
-		// 	form.description = project.description;
-		// 	form.skills = project.skills.join(", ");
-		// 	// form.media = project.media || [];
-		// }
-	}
-});
+// onMounted(async () => {
+// 	projectId.value = route.params.id;
+// 	if (projectId.value) {
+// 		isEditMode.value = true;
+// 		form.setFieldValue("title", projectId.value);
+// 		const project = project.getProjectById(projectId.value);
+// 		if (project) {
+// 			form.title = project.title;
+// 			form.description = project.description;
+// 			form.tags = project.tags.join(", ");
+// 			// form.media = project.media || [];
+// 		}
+// 	}
+// });
 
-function onSubmit(values) {
-	console.log(values);
+async function onSubmit(values) {
+	const tagsArray = values.tags.split(",").map((tag) => tag.trim());
+
+	const { imageURL } = await useImageUpload(values.file);
+
+	console.log({ ...values, tags: tagsArray, file: imageURL.href });
+
+	// await project.createNewProject({
+	// 	...values,
+	// 	tags: tagsArray,
+	// });
 }
 </script>
 
 <template>
-	<AutoForm
-		:form="form"
-		class="w-2/3 space-y-6"
-		:schema="schema"
-		:field-config="{
-			title: {
-				label: 'Project Title',
-			},
-			tags: {
-				inputProps: {
-					placeholder: 'Enter tags (comma-separated)',
+	<ClientOnly>
+		<AutoForm
+			:form="form"
+			class="w-full px-10 lg:w-2/3 lg:px-0 space-y-6"
+			:schema="schema"
+			:field-config="{
+				title: {
+					label: 'Project Title',
 				},
-			},
-			category: {
-				inputProps: {
-					placeholder: 'e.g. Art, Music, Tech',
+				tags: {
+					inputProps: {
+						placeholder: 'Enter tags (comma-separated)',
+					},
 				},
-			},
-			description: {
-				label: 'Project Description',
-				component: 'textarea',
-			},
-
-			status: {
-				label: 'Project status',
-			},
-
-			file: {
-				label: 'Upload Image',
-				component: 'file',
-			},
-		}"
-		@submit="onSubmit"
-	>
-		<Button type="submit"> Submit </Button>
-	</AutoForm>
+				category: {
+					inputProps: {
+						placeholder: 'e.g. Art, Music, Tech',
+					},
+				},
+				description: {
+					label: 'Project Description',
+					component: 'textarea',
+				},
+				status: {
+					label: 'Project status',
+				},
+				file: {
+					label: 'Upload Image',
+					component: 'file',
+				},
+			}"
+			@submit="onSubmit"
+		>
+			<Button type="submit" class="w-full"> Submit </Button>
+		</AutoForm>
+	</ClientOnly>
 </template>

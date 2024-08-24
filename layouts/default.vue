@@ -1,4 +1,5 @@
+<script setup></script>
+
 <template>
-	<!-- Your default layout structure -->
-	<NuxtLayout />
+	<NuxtPage />
 </template>

@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { account } from "~/appwrite";
 import {
+	createProject,
 	createUserAccount,
 	getCurrentUser,
 	signInAccount,
@@ -12,5 +13,21 @@ export const useProject = defineStore("project", () => {
 	const error = ref(null);
 	// ---- ACTIONS -----
 
-	return {};
+	const createNewProject = async (projectData) => {
+		loading.value = true;
+		try {
+			await createProject(projectData);
+			loading.value = false;
+		} catch (err) {
+			error.value = err;
+		}
+	};
+	const getProjectById = async (projectId) => {};
+
+	return {
+		createNewProject,
+		getProjectById,
+		error,
+		loading,
+	};
 });
