@@ -11,21 +11,21 @@
 					Share your projects, find collaborators, and bring your ideas to life.
 				</p>
 				<ClientOnly>
-
 					<NuxtLink
 						v-if="!user.isAuthenticated"
 						to="sign-in"
-						class="bg-white text-slate-700 border-2 border-slate-800 px-2.5 py-2 rounded-sm">
+						class="bg-white text-slate-700 border-2 border-slate-800 px-2.5 py-2 rounded-sm"
+					>
 						Sign in to Create Project
 					</NuxtLink>
 
 					<NuxtLink
 						v-else
 						to="projects/new"
-						class="bg-white text-slate-700 border-2 border-slate-800 px-4 py-2 rounded-sm">
+						class="bg-white text-slate-700 border-2 border-slate-800 px-4 py-2 rounded-sm"
+					>
 						Create a Project
 					</NuxtLink>
-
 				</ClientOnly>
 			</div>
 		</section>
@@ -97,12 +97,10 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Header from "~/components/Header.vue";
-import { useAuth } from "~/store/auth";
-const user = useAuth();
+import { useAuthStore } from "~/store/auth";
+const user = useAuthStore();
 
-onMounted(async () => {
-	
-});
+onMounted(async () => {});
 
 const featuredProjects = [
 	{

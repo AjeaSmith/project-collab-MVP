@@ -4,6 +4,8 @@ import {
 	getAllProjects,
 	editProject,
 	getProject,
+	getUserProjects,
+	deleteProject,
 } from "~/lib/appwrite/api";
 
 export const useProjectStore = defineStore("project", () => {
@@ -11,6 +13,7 @@ export const useProjectStore = defineStore("project", () => {
 	const projects = ref(null);
 	const loading = ref(false);
 	const error = ref(null);
+	const success = ref(null);
 
 	// ---- ACTIONS -----
 	const getProjects = async () => {
@@ -22,6 +25,31 @@ export const useProjectStore = defineStore("project", () => {
 		} catch (err) {
 			error.value = err;
 			console.log(err);
+		} finally {
+			loading.value = false;
+		}
+	};
+	const getProjectById = async (projectId) => {
+		loading.value = true;
+		try {
+			const project = await getProject(projectId);
+			loading.value = false;
+			return project;
+		} catch (err) {
+			error.value = err;
+		} finally {
+			loading.value = false;
+		}
+	};
+
+	const getCurrentUserProjects = async (userId) => {
+		loading.value = true;
+		try {
+			const userProjects = await getUserProjects(userId);
+			loading.value = false;
+			return userProjects;
+		} catch (err) {
+			error.value = err;
 		} finally {
 			loading.value = false;
 		}
@@ -51,7 +79,12 @@ export const useProjectStore = defineStore("project", () => {
 		const tagsArray = data.tags.split(",").map((tag) => tag.trim());
 
 		try {
-			await editProject(projectId, { ...data, tags: tagsArray });
+			const { imageURL } = await useImageUpload(data.file);
+			await editProject(projectId, {
+				...data,
+				tags: tagsArray,
+				file: imageURL.href,
+			});
 			loading.value = false;
 		} catch (err) {
 			error.value = err;
@@ -60,12 +93,11 @@ export const useProjectStore = defineStore("project", () => {
 		}
 	};
 
-	const getProjectById = async (projectId) => {
+	const removeProject = async (projectId) => {
 		loading.value = true;
 		try {
-			const project = await getProject(projectId);
+			await deleteProject(projectId);
 			loading.value = false;
-			return project;
 		} catch (err) {
 			error.value = err;
 		} finally {
@@ -78,9 +110,10 @@ export const useProjectStore = defineStore("project", () => {
 		edittingProject,
 		getProjectById,
 		getProjects,
+		getCurrentUserProjects,
+		removeProject,
 		projects,
 		error,
 		loading,
-		editLoading,
 	};
 });

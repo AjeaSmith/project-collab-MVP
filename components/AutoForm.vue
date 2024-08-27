@@ -6,17 +6,16 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useProjectStore } from "~/store/project";
 import { Loader2Icon } from "lucide-vue-next";
-import { useAuth } from "~/store/auth";
+import { useAuthStore } from "~/store/auth";
 
 const project = useProjectStore();
-const user = useAuth();
+const user = useAuthStore();
 
 const route = useRoute();
 const router = useRouter();
 
 const isEditMode = ref(false);
 const isEditPageLoading = ref(false);
-const projectId = ref(null);
 const projectImage = ref(null);
 
 const schema = z.object({
@@ -65,19 +64,18 @@ onMounted(async () => {
 			form.setFieldValue("tags", tagsString);
 			form.setFieldValue("category", projectData.category);
 			form.setFieldValue("status", projectData.status);
-			form.setFieldValue("file", projectData.file || "");
 		}
 	}
 });
 
 async function onSubmit(values) {
 	if (isEditMode.value) {
-		// Edit project
-		await project.edittingProject(projectId.value, values);
-		console.log(values);
+		// TODO: Test out edit project method
+		await project.edittingProject(route.params.id, values);
+		router.push("/my-projects");
 	} else {
 		await project.createNewProject(values, user.current.$id);
-		router.push("/projects");
+		router.push("/my-projects");
 	}
 }
 </script>

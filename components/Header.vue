@@ -1,5 +1,6 @@
 <template>
 	<ClientOnly>
+		<!-- TODO: Active links -->
 		<header class="bg-white shadow">
 			<div
 				class="container mx-auto px-4 flex justify-between items-center py-4"
@@ -133,12 +134,12 @@ import {
 	DropdownMenuContent,
 } from "./ui/dropdown-menu";
 import { Loader2Icon } from "lucide-vue-next";
-import { useAuth } from "~/store/auth";
+import { useAuthStore } from "~/store/auth";
 
 // State to manage mobile menu visibility
 const isMobileMenuOpen = ref(false);
 
-const user = useAuth();
+const user = useAuthStore();
 
 onMounted(async () => {
 	if (user.isAuthenticated) {

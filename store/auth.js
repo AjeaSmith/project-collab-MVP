@@ -6,7 +6,7 @@ import {
 	signInAccount,
 } from "~/lib/appwrite/api";
 
-export const useAuth = defineStore("auth", () => {
+export const useAuthStore = defineStore("auth", () => {
 	// ---- PROPERTIES -----
 	const loading = ref(false);
 	const error = ref(null);

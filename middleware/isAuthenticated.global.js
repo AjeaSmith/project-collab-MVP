@@ -1,7 +1,7 @@
-import { useAuth } from "~/store/auth";
+import { useAuthStore } from "~/store/auth";
 
 export default defineNuxtRouteMiddleware((to) => {
-	const user = useAuth();
+	const user = useAuthStore();
 	if (import.meta.client) {
 		const authCookie = localStorage.getItem("cookieFallback");
 		if (
