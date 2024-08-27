@@ -12,5 +12,4 @@ definePageMeta({
 	layout: "project-layout",
 });
 import AutoForm from "~/components/AutoForm.vue";
-import ProjectForm from "~/components/ProjectForm.vue";
 </script>

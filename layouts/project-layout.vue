@@ -10,7 +10,7 @@ const pageTitle = computed(() => {
 
 <template>
 	<main
-		class="bg-gray-300 my-auto flex h-screen flex-col justify-center items-center p-3"
+		class="bg-gray-300 my-auto flex flex-col justify-center items-center p-3"
 	>
 		<h1 class="text-3xl mb-3">{{ pageTitle }}</h1>
 		<NuxtPage />

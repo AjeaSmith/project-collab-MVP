@@ -4,15 +4,20 @@ import { Button } from "@/components/ui/button";
 import { AutoForm } from "@/components/ui/auto-form";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
-import { useProject } from "~/store/project";
-import { dataURLToBlob } from "blob-util";
+import { useProjectStore } from "~/store/project";
+import { Loader2Icon } from "lucide-vue-next";
+import { useAuth } from "~/store/auth";
 
-const project = useProject();
+const project = useProjectStore();
+const user = useAuth();
 
 const route = useRoute();
+const router = useRouter();
 
 const isEditMode = ref(false);
+const isEditPageLoading = ref(false);
 const projectId = ref(null);
+const projectImage = ref(null);
 
 const schema = z.object({
 	title: z
@@ -42,38 +47,53 @@ const form = useForm({
 	validationSchema: toTypedSchema(schema),
 });
 
-// onMounted(async () => {
-// 	projectId.value = route.params.id;
-// 	if (projectId.value) {
-// 		isEditMode.value = true;
-// 		form.setFieldValue("title", projectId.value);
-// 		const project = project.getProjectById(projectId.value);
-// 		if (project) {
-// 			form.title = project.title;
-// 			form.description = project.description;
-// 			form.tags = project.tags.join(", ");
-// 			// form.media = project.media || [];
-// 		}
-// 	}
-// });
+onMounted(async () => {
+	isEditPageLoading.value = true;
+
+	await user.fetchCurrentUser();
+	const projectData = await project.getProjectById(route.params.id);
+
+	isEditPageLoading.value = false;
+
+	if (route.params.id) {
+		isEditMode.value = true;
+		const tagsString = projectData.tags.join(", ");
+		if (projectData) {
+			projectImage.value = projectData.file;
+			form.setFieldValue("title", projectData.title);
+			form.setFieldValue("description", projectData.description);
+			form.setFieldValue("tags", tagsString);
+			form.setFieldValue("category", projectData.category);
+			form.setFieldValue("status", projectData.status);
+			form.setFieldValue("file", projectData.file || "");
+		}
+	}
+});
 
 async function onSubmit(values) {
-	const tagsArray = values.tags.split(",").map((tag) => tag.trim());
-
-	const { imageURL } = await useImageUpload(values.file);
-
-	console.log({ ...values, tags: tagsArray, file: imageURL.href });
-
-	// await project.createNewProject({
-	// 	...values,
-	// 	tags: tagsArray,
-	// });
+	if (isEditMode.value) {
+		// Edit project
+		await project.edittingProject(projectId.value, values);
+		console.log(values);
+	} else {
+		await project.createNewProject(values, user.current.$id);
+		router.push("/projects");
+	}
 }
 </script>
 
 <template>
+	<div v-if="project.error" class="my-3 text-red-500 text-xl">
+		{{ project.error }}
+	</div>
 	<ClientOnly>
+		<template v-if="isEditPageLoading">
+			<div class="flex justify-center mt-[200px] h-screen">
+				<Loader2Icon class="animate-spin w-[60px] h-[60px]" />
+			</div>
+		</template>
 		<AutoForm
+			v-else
 			:form="form"
 			class="w-full px-10 lg:w-2/3 lg:px-0 space-y-6"
 			:schema="schema"
@@ -105,7 +125,16 @@ async function onSubmit(values) {
 			}"
 			@submit="onSubmit"
 		>
-			<Button type="submit" class="w-full"> Submit </Button>
+			<template v-if="projectImage">
+				<ImagePreviewer :image="projectImage" />
+			</template>
+			<Button type="submit" class="w-full" :disabled="project.loading">
+				<template v-if="project.loading">
+					<Loader2Icon class="mr-2 animate-spin" />
+					<p>Submitting</p>
+				</template>
+				<template v-else> Submit </template>
+			</Button>
 		</AutoForm>
 	</ClientOnly>
 </template>
