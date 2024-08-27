@@ -2,7 +2,7 @@
 	<ClientOnly>
 		<!-- TODO: Active links -->
 		<header class="bg-white shadow">
-			<div
+			<section
 				class="container mx-auto px-4 flex justify-between items-center py-4"
 			>
 				<!-- Logo -->
@@ -34,34 +34,27 @@
 					class="px-4 py-4 flex-col absolute top-[7%] left-0 w-full bg-white | lg:w-auto lg:bg-transparent lg:flex lg:relative lg:space-x-6 lg:flex-row lg:px-0 lg:py-0"
 				>
 					<NuxtLink
+						activeClass="text-blue-500"
 						to="/explore"
 						class="block py-2 text-gray-600 hover:text-gray-900"
 						>Explore Projects</NuxtLink
 					>
-					<!-- <div v-if="user.current">{{ user.current }}</div> -->
+
 					<NuxtLink
-						v-if="user.isAuthenticated"
-						to="/my-projects"
-						class="block py-2 text-gray-600 hover:text-gray-900"
-						>My Projects</NuxtLink
-					>
-					<NuxtLink
+						activeClass="text-blue-500"
 						to="/collaborators"
 						class="block py-2 text-gray-600 hover:text-gray-900"
 						>Find Collaborators</NuxtLink
 					>
-					<NuxtLink
-						v-if="user.isAuthenticated"
-						to="/messages"
-						class="block py-2 text-gray-600 hover:text-gray-900"
-						>Messages</NuxtLink
-					>
-					<NuxtLink
-						v-if="user.isAuthenticated"
-						to="/profile"
-						class="block py-2 text-gray-600 hover:text-gray-900"
-						>Profile</NuxtLink
-					>
+					<template v-for="link in navLinks">
+						<NuxtLink
+							v-if="link.auth"
+							activeClass="text-blue-500"
+							:to="link.path"
+							class="block py-2 text-gray-600 hover:text-gray-900"
+							>{{ link.label }}</NuxtLink
+						>
+					</template>
 				</nav>
 				<!-- User Menu -->
 				<div class="flex items-center space-x-4">
@@ -119,7 +112,7 @@
 						>
 					</template>
 				</div>
-			</div>
+			</section>
 		</header>
 	</ClientOnly>
 </template>
@@ -136,10 +129,15 @@ import {
 import { Loader2Icon } from "lucide-vue-next";
 import { useAuthStore } from "~/store/auth";
 
+const user = useAuthStore();
+
+const navLinks = ref([
+	{ label: "My Projects", path: "/my-projects", auth: user.isAuthenticated },
+	{ label: "Messages", path: "/messages", auth: user.isAuthenticated },
+	{ label: "Profile", path: "/profile", auth: user.isAuthenticated },
+]);
 // State to manage mobile menu visibility
 const isMobileMenuOpen = ref(false);
-
-const user = useAuthStore();
 
 onMounted(async () => {
 	if (user.isAuthenticated) {

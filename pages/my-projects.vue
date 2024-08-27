@@ -25,7 +25,7 @@
 		>
 			<div
 				v-for="project in userProjects"
-				:key="project.id"
+				:key="project.$id"
 				class="bg-white p-6 rounded-lg shadow-lg"
 			>
 				<h2 class="text-xl font-semibold mb-2">{{ project.title }}</h2>
@@ -33,13 +33,13 @@
 
 				<div class="flex justify-between items-center">
 					<router-link
-						:to="`/projects/${project.id}`"
+						:to="`/projects/${project.$id}`"
 						class="text-blue-500 hover:underline"
 					>
 						View Project
 					</router-link>
 					<router-link
-						:to="`/projects/edit/${project.id}`"
+						:to="`/projects/edit/${project.$id}`"
 						class="text-blue-500 hover:underline"
 					>
 						Edit Project

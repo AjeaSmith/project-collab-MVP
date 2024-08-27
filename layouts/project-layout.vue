@@ -1,4 +1,6 @@
 <script setup>
+import { ArrowLeft } from "lucide-vue-next";
+
 // Dynamically set the title based on the route
 const route = useRoute();
 const pageTitle = computed(() => {
@@ -10,9 +12,18 @@ const pageTitle = computed(() => {
 
 <template>
 	<main
-		class="bg-gray-300 my-auto flex flex-col justify-center items-center p-3"
+		class="bg-gray-300 my-auto px-10 flex flex-col justify-center items-center p-3 space-y-5"
 	>
-		<h1 class="text-3xl mb-3">{{ pageTitle }}</h1>
+		<section class="w-full flex my-5 justify-between items-center">
+			<NuxtLink
+				to="/"
+				class="flex items-center space-x-2 flex-auto text-blue-500"
+			>
+				<ArrowLeft />
+				<span>Back</span>
+			</NuxtLink>
+			<h1 class="text-3xl flex-auto">{{ pageTitle }}</h1>
+		</section>
 		<NuxtPage />
 	</main>
 </template>

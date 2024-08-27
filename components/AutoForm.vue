@@ -93,7 +93,7 @@ async function onSubmit(values) {
 		<AutoForm
 			v-else
 			:form="form"
-			class="w-full px-10 lg:w-2/3 lg:px-0 space-y-6"
+			class="w-full lg:w-2/3 lg:px-0 space-y-6"
 			:schema="schema"
 			:field-config="{
 				title: {
