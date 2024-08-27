@@ -1,85 +1,3 @@
-<script setup>
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import { AutoForm } from "@/components/ui/auto-form";
-import { useForm } from "vee-validate";
-import { toTypedSchema } from "@vee-validate/zod";
-import { useProjectStore } from "~/store/project";
-import { Loader2Icon } from "lucide-vue-next";
-import { useAuthStore } from "~/store/auth";
-
-const project = useProjectStore();
-const user = useAuthStore();
-
-const route = useRoute();
-const router = useRouter();
-
-const isEditMode = ref(false);
-const isEditPageLoading = ref(false);
-const projectImage = ref(null);
-
-const schema = z.object({
-	title: z
-		.string({
-			required_error: "Title is required.",
-		})
-		.min(2, {
-			message: "Title must be at least 2 characters.",
-		}),
-
-	description: z.string().min(10, {
-		message: "Description must be at least 10 characters.",
-	}),
-
-	tags: z.string({
-		required_error: "Tags is required.",
-	}),
-	category: z.string({
-		required_error: "Category is required.",
-	}),
-	status: z.enum(["open", "in progress"]),
-
-	file: z.string().optional(),
-});
-
-const form = useForm({
-	validationSchema: toTypedSchema(schema),
-});
-
-onMounted(async () => {
-	isEditPageLoading.value = true;
-
-	await user.fetchCurrentUser();
-	const projectData = await project.getProjectById(route.params.id);
-
-	isEditPageLoading.value = false;
-
-	if (route.params.id) {
-		isEditMode.value = true;
-		const tagsString = projectData.tags.join(", ");
-		if (projectData) {
-			projectImage.value = projectData.file;
-			form.setFieldValue("title", projectData.title);
-			form.setFieldValue("description", projectData.description);
-			form.setFieldValue("tags", tagsString);
-			form.setFieldValue("category", projectData.category);
-			form.setFieldValue("status", projectData.status);
-		}
-	}
-});
-
-async function onSubmit(values) {
-	if (isEditMode.value) {
-		// TODO: Test out edit project method
-		await project.edittingProject(route.params.id, values);
-		router.push("/my-projects");
-	} else {
-		await project.createNewProject(values, user.current.$id);
-		router.push("/my-projects");
-	}
-}
-</script>
-
 <template>
 	<div v-if="project.error" class="my-3 text-red-500 text-xl">
 		{{ project.error }}
@@ -136,3 +54,85 @@ async function onSubmit(values) {
 		</AutoForm>
 	</ClientOnly>
 </template>
+
+<script setup>
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { AutoForm } from "@/components/ui/auto-form";
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import { useProjectStore } from "~/store/project";
+import { Loader2Icon } from "lucide-vue-next";
+import { useAuthStore } from "~/store/auth";
+
+const project = useProjectStore();
+const user = useAuthStore();
+
+const route = useRoute();
+const router = useRouter();
+
+const isEditMode = ref(false);
+const isEditPageLoading = ref(false);
+const projectImage = ref(null);
+
+const schema = z.object({
+	title: z
+		.string({
+			required_error: "Title is required.",
+		})
+		.min(2, {
+			message: "Title must be at least 2 characters.",
+		}),
+
+	description: z.string().min(10, {
+		message: "Description must be at least 10 characters.",
+	}),
+
+	tags: z.string({
+		required_error: "Tags is required.",
+	}),
+	category: z.string({
+		required_error: "Category is required.",
+	}),
+	status: z.enum(["open", "in progress"]),
+
+	file: z.string().optional(),
+});
+
+const form = useForm({
+	validationSchema: toTypedSchema(schema),
+});
+
+onMounted(async () => {
+	if (route.params.id) {
+		isEditPageLoading.value = true;
+		isEditMode.value = true;
+		
+		await user.fetchCurrentUser();
+		const projectData = await project.getProjectById(route.params.id);
+
+		isEditPageLoading.value = false;
+
+		const tagsString = projectData.tags.join(", ");
+		if (projectData) {
+			projectImage.value = projectData.file;
+			form.setFieldValue("title", projectData.title);
+			form.setFieldValue("description", projectData.description);
+			form.setFieldValue("tags", tagsString);
+			form.setFieldValue("category", projectData.category);
+			form.setFieldValue("status", projectData.status);
+		}
+	}
+});
+
+async function onSubmit(values) {
+	if (isEditMode.value) {
+		// TODO: Test out edit project method
+		await project.edittingProject(route.params.id, values);
+		router.push("/my-projects");
+	} else {
+		await project.createNewProject(values, user.current.$id);
+		router.push("/my-projects");
+	}
+}
+</script>

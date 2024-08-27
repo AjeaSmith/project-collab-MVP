@@ -1,4 +1,5 @@
 <template>
+	<Header />
 	<div>
 		<h2>Explore</h2>
 		<section class="flex space-x-3">
@@ -14,6 +15,7 @@
 </template>
 
 <script setup>
+import Header from "~/components/Header.vue";
 import { useProjectStore } from "~/store/project";
 
 const project = useProjectStore();

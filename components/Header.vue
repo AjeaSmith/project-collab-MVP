@@ -1,6 +1,5 @@
 <template>
 	<ClientOnly>
-		<!-- TODO: Active links -->
 		<header class="bg-white shadow">
 			<section
 				class="container mx-auto px-4 flex justify-between items-center py-4"
@@ -46,11 +45,10 @@
 						class="block py-2 text-gray-600 hover:text-gray-900"
 						>Find Collaborators</NuxtLink
 					>
-					<template v-for="link in navLinks">
+					<template v-if="user.isAuthenticated" v-for="link in navLinks">
 						<NuxtLink
-							v-if="link.auth"
-							activeClass="text-blue-500"
 							:to="link.path"
+							activeClass="text-blue-500"
 							class="block py-2 text-gray-600 hover:text-gray-900"
 							>{{ link.label }}</NuxtLink
 						>
@@ -132,9 +130,9 @@ import { useAuthStore } from "~/store/auth";
 const user = useAuthStore();
 
 const navLinks = ref([
-	{ label: "My Projects", path: "/my-projects", auth: user.isAuthenticated },
-	{ label: "Messages", path: "/messages", auth: user.isAuthenticated },
-	{ label: "Profile", path: "/profile", auth: user.isAuthenticated },
+	{ label: "My Projects", path: "/my-projects" },
+	{ label: "Messages", path: "/messages" },
+	{ label: "Profile", path: "/profile" },
 ]);
 // State to manage mobile menu visibility
 const isMobileMenuOpen = ref(false);
