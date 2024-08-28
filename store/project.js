@@ -10,7 +10,6 @@ import {
 
 export const useProjectStore = defineStore("project", () => {
 	// ---- PROPERTIES -----
-	const projects = ref(null);
 	const loading = ref(false);
 	const error = ref(null);
 	const success = ref(null);
@@ -20,8 +19,8 @@ export const useProjectStore = defineStore("project", () => {
 		loading.value = true;
 		try {
 			const response = await getAllProjects();
-			projects.value = response.documents;
 			loading.value = false;
+			return response.documents;
 		} catch (err) {
 			error.value = err;
 			console.log(err);
@@ -112,7 +111,6 @@ export const useProjectStore = defineStore("project", () => {
 		getProjects,
 		getCurrentUserProjects,
 		removeProject,
-		projects,
 		error,
 		loading,
 	};

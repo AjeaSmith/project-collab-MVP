@@ -62,7 +62,6 @@ const userProjects = ref([]);
 
 onMounted(async () => {
 	try {
-		// Fetch the user's projects
 		await user.fetchCurrentUser();
 		userProjects.value = await project.getCurrentUserProjects(user.current.$id);
 	} finally {
@@ -70,3 +69,8 @@ onMounted(async () => {
 	}
 });
 </script>
+<style scoped>
+.container {
+	padding-inline: 1rem;
+}
+</style>

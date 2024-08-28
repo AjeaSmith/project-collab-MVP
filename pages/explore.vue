@@ -1,26 +1,97 @@
 <template>
 	<Header />
-	<div>
-		<h2>Explore</h2>
-		<section class="flex space-x-3">
-			<NuxtLink
-				:to="`/projects/edit/${project.$id}`"
-				class="border-2 border-red-500 p-3"
-				v-for="project in project.projects"
+	<section class="container mx-auto py-8">
+		<h1 class="text-3xl font-bold mb-6">Explore Projects</h1>
+
+		<div v-if="isLoading">
+			<Loader2Icon class="animate-spin mx-auto text-blue-500 w-10 h-10" />
+		</div>
+
+		<div v-else class="mb-8 flex">
+			<input
+				v-model="searchQuery"
+				type="text"
+				placeholder="Find projects by title, category, or description..."
+				class="w-full border px-4 py-2 rounded-lg"
+			/>
+		</div>
+		<!-- No Results Message -->
+		<div
+			v-if="!isLoading && !filteredProjects.length"
+			class="text-center text-gray-600"
+		>
+			<p>No projects found matching your search.</p>
+		</div>
+
+		<!-- Projects Grid -->
+		<section
+			v-if="!isLoading && filteredProjects.length"
+			class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+		>
+			<div
+				v-for="project in filteredProjects"
+				:key="project.id"
+				class="bg-white p-6 rounded-lg shadow-lg"
 			>
-				{{ project.title }} {{ project.creator.name }}
-			</NuxtLink>
+				<h2 class="text-xl font-semibold mb-2">{{ project.title }}</h2>
+				<p class="text-gray-600 mb-4">{{ project.description }}</p>
+				<div class="flex justify-between items-center">
+					<span class="text-sm text-gray-500">{{ project.category }}</span>
+					<router-link
+						:to="`/projects/${project.$id}`"
+						class="text-blue-500 hover:underline"
+					>
+						View Project
+					</router-link>
+				</div>
+			</div>
 		</section>
-	</div>
+	</section>
 </template>
 
 <script setup>
+import { Loader2Icon } from "lucide-vue-next";
 import Header from "~/components/Header.vue";
 import { useProjectStore } from "~/store/project";
 
 const project = useProjectStore();
+const projects = ref([]);
+const isLoading = ref(true);
+const searchQuery = ref("");
 
 onMounted(async () => {
-	await project.getProjects();
+	try {
+		projects.value = await project.getProjects();
+	} finally {
+		isLoading.value = false;
+	}
+});
+
+const filteredProjects = computed(() => {
+	if (!searchQuery.value) {
+		return projects.value;
+	}
+
+	const lowerCaseQuery = searchQuery.value.toLowerCase();
+
+	return projects.value.filter((project) => {
+		return (
+			project.title.toLowerCase().includes(lowerCaseQuery) ||
+			project.description.toLowerCase().includes(lowerCaseQuery) ||
+			project.tags.includes(lowerCaseQuery) ||
+			project.category.toLowerCase().includes(lowerCaseQuery) ||
+			project.status.toLowerCase().includes(lowerCaseQuery)
+		);
+	});
 });
 </script>
+<style scoped>
+.container {
+	padding-inline: 1rem;
+	max-width: 1400px;
+}
+
+.bg-white {
+	background-color: white;
+}
+</style>
