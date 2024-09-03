@@ -5,7 +5,7 @@
 	<ClientOnly>
 		<template v-if="isEditPageLoading">
 			<div class="flex justify-center mt-[200px] h-screen">
-				<Loader2Icon class="animate-spin w-[60px] h-[60px]" />
+				<LoadingSpinner className="w-[60px] h-[60px]" />
 			</div>
 		</template>
 		<AutoForm
@@ -46,7 +46,7 @@
 			</template>
 			<Button type="submit" class="w-full" :disabled="project.loading">
 				<template v-if="project.loading">
-					<Loader2Icon class="mr-2 animate-spin" />
+					<LoadingSpinner className="mr-2" />
 					<p>Submitting</p>
 				</template>
 				<template v-else> Submit </template>
@@ -62,8 +62,8 @@ import { AutoForm } from "@/components/ui/auto-form";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useProjectStore } from "~/store/project";
-import { Loader2Icon } from "lucide-vue-next";
 import { useUserStore } from "~/store/user";
+import LoadingSpinner from "./LoadingSpinner.vue";
 
 const project = useProjectStore();
 const user = useUserStore();

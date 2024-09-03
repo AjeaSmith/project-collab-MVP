@@ -49,7 +49,7 @@
 		</div>
 
 		<div v-if="isLoading">
-			<Loader2Icon class="animate-spin mx-auto text-blue-500 w-10 h-10" />
+			<LoadingSpinner className="mx-auto my-5 w-10 h-10" />
 		</div>
 
 		<!-- Collaborators Grid -->
@@ -87,9 +87,9 @@
 </template>
 
 <script setup>
-import { Loader2Icon } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import Header from "~/components/Header.vue";
+import LoadingSpinner from "~/components/LoadingSpinner.vue";
 import { useUserStore } from "~/store/user";
 const user = useUserStore();
 

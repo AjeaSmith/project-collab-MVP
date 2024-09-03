@@ -92,7 +92,7 @@
 						v-if="(type === 'sign-up' || type === 'sign-in') && user.loading"
 						class="flex items-center"
 					>
-						<Loader2Icon class="animate-spin h-5 w-5 mr-2" />
+						<LoadingSpinner />
 						Authenticating
 					</div>
 					<template v-else>{{
@@ -141,8 +141,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Loader2Icon } from "lucide-vue-next";
 import { useUserStore } from "~/store/user";
+import LoadingSpinner from "./LoadingSpinner.vue";
 
 const user = useUserStore();
 

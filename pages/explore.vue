@@ -4,7 +4,7 @@
 		<h1 class="text-3xl font-bold mb-6">Explore Projects</h1>
 
 		<div v-if="isLoading">
-			<Loader2Icon class="animate-spin mx-auto text-blue-500 w-10 h-10" />
+			<LoadingSpinner className="mx-auto w-10 h-10" />
 		</div>
 
 		<div v-else class="mb-8 flex">
@@ -50,8 +50,8 @@
 </template>
 
 <script setup>
-import { Loader2Icon } from "lucide-vue-next";
 import Header from "~/components/Header.vue";
+import LoadingSpinner from "~/components/LoadingSpinner.vue";
 import { useProjectStore } from "~/store/project";
 
 const project = useProjectStore();

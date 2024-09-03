@@ -22,7 +22,7 @@
 					<NuxtLink
 						v-else
 						to="projects/new"
-						class="bg-white text-slate-700 border-2 border-slate-800 px-4 py-2 rounded-sm"
+						class="px-4 py-2 rounded-sm bg-blue-500 text-white hover:bg-blue-700"
 					>
 						Create a New Project
 					</NuxtLink>
@@ -31,33 +31,50 @@
 		</section>
 
 		<!-- Featured Projects Section -->
-		<!-- <section class="py-12">
+		<section class="py-12">
 			<div class="container mx-auto">
 				<h2 class="text-3xl font-bold text-gray-800 mb-6">Featured Projects</h2>
+				<LoadingSpinner v-if="project.loading" className="w-10 h-10 mx-auto" />
 				<div
-					class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+					v-else
+					class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
 				>
-					<Card
+					<NuxtLink
 						v-for="project in featuredProjects"
-						:key="project.id"
+						:key="project.$id"
+						:to="`project/${project.$id}`"
 						class="shadow-lg"
 					>
-						<img
-							:src="project.image"
-							alt="Project image"
-							class="w-full h-48 object-cover rounded-t-lg"
-						/>
-						<div class="p-4">
-							<h3 class="text-xl font-semibold text-gray-800">
-								{{ project.title }}
-							</h3>
-							<p class="text-gray-600 mt-2">{{ project.description }}</p>
-							<Button variant="link" class="mt-4">View Project</Button>
-						</div>
-					</Card>
+						<Card>
+							<img
+								:src="project.file"
+								alt="Project image"
+								class="w-full h-48 object-cover rounded-t-lg"
+							/>
+							<div class="p-4">
+								<h3 class="text-xl font-semibold text-gray-800">
+									{{
+										truncate(project.title, {
+											length: 30,
+											separator: " ",
+										})
+									}}
+								</h3>
+								<p class="text-gray-600 my-2">
+									{{
+										truncate(project.description, {
+											length: 120,
+											separator: " ",
+										})
+									}}
+								</p>
+								<p class="text-blue-500 hover:text-blue-700">View Project</p>
+							</div>
+						</Card>
+					</NuxtLink>
 				</div>
 			</div>
-		</section> -->
+		</section>
 
 		<!-- Categories Overview Section -->
 		<!-- <section class="py-12 bg-gray-100">
@@ -82,41 +99,43 @@
 				</div>
 			</div>
 		</section> -->
-
-		<!-- Call to Action Section -->
-		<section class="py-12">
-			<div class="container mx-auto text-center">
-				<h2 class="text-3xl font-bold text-gray-800 mb-6">Join a Project</h2>
-				<Button size="lg">Find Collaborators</Button>
-			</div>
-		</section>
 	</div>
 </template>
 
 <script setup>
+import { truncate } from "lodash";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Header from "~/components/Header.vue";
+import { useProjectStore } from "~/store/project";
 import { useUserStore } from "~/store/user";
+import LoadingSpinner from "~/components/LoadingSpinner.vue";
 const user = useUserStore();
+const project = useProjectStore();
 
-onMounted(async () => {});
+const projects = ref([]);
+onMounted(async () => {
+	projects.value = await project.getProjects();
+});
 
-const featuredProjects = [
-	{
-		id: 1,
-		title: "Project 1",
-		description: "This is a brief description of Project 1.",
-		image: "project1.jpg",
-	},
-	{
-		id: 2,
-		title: "Project 2",
-		description: "This is a brief description of Project 2.",
-		image: "project2.jpg",
-	},
-	// Add more project data...
-];
+const featuredProjects = computed(() => {
+	return projects.value.slice(0, 5);
+});
+// const featuredProjects = [
+// 	{
+// 		id: 1,
+// 		title: "Project 1",
+// 		description: "This is a brief description of Project 1.",
+// 		image: "project1.jpg",
+// 	},
+// 	{
+// 		id: 2,
+// 		title: "Project 2",
+// 		description: "This is a brief description of Project 2.",
+// 		image: "project2.jpg",
+// 	},
+// 	// Add more project data...
+// ];
 </script>
 
 <style scoped>

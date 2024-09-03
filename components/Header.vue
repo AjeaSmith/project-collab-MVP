@@ -75,7 +75,7 @@
 									</Avatar>
 								</template>
 								<template v-else>
-									<Loader2Icon class="animate-spin h-5 w-5 mx-auto" />
+									<LoadingSpinner />
 								</template>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent class="w-48">
@@ -89,7 +89,7 @@
 									{{ user.current.name }}
 								</div>
 								<template v-else>
-									<Loader2Icon class="animate-spin size-9 mx-auto" />
+									<LoadingSpinner className="size-9 mx-auto" />
 								</template>
 								<DropdownMenuItem>
 									<button
@@ -124,8 +124,9 @@ import {
 	DropdownMenuTrigger,
 	DropdownMenuContent,
 } from "./ui/dropdown-menu";
-import { Loader2Icon } from "lucide-vue-next";
+
 import { useUserStore } from "~/store/user";
+import LoadingSpinner from "./LoadingSpinner.vue";
 
 const user = useUserStore();
 
