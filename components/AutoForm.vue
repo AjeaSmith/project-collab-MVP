@@ -63,10 +63,10 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useProjectStore } from "~/store/project";
 import { Loader2Icon } from "lucide-vue-next";
-import { useAuthStore } from "~/store/auth";
+import { useUserStore } from "~/store/user";
 
 const project = useProjectStore();
-const user = useAuthStore();
+const user = useUserStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -107,7 +107,7 @@ onMounted(async () => {
 	if (route.params.id) {
 		isEditPageLoading.value = true;
 		isEditMode.value = true;
-		
+
 		await user.fetchCurrentUser();
 		const projectData = await project.getProjectById(route.params.id);
 

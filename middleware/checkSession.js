@@ -7,8 +7,6 @@ export default defineNuxtRouteMiddleware((to) => {
 			authCookie !== undefined
 		) {
 			return navigateTo("/");
-		} else if (!authCookie) {
-			return navigateTo("sign-in");
 		}
 	}
 });

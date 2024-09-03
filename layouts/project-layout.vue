@@ -12,9 +12,9 @@ const pageTitle = computed(() => {
 
 <template>
 	<main
-		class="bg-gray-300 my-auto px-10 flex flex-col justify-center items-center p-3 space-y-5"
+		class="bg-gray-300 my-auto px-10 h-screen flex flex-col justify-center items-center p-3 space-y-5"
 	>
-		<section class="w-full flex my-5 justify-between items-center">
+		<section class="w-full flex mb-5 justify-between items-center">
 			<NuxtLink
 				to="/"
 				class="flex items-center space-x-2 flex-auto text-blue-500"

@@ -24,7 +24,7 @@
 						to="projects/new"
 						class="bg-white text-slate-700 border-2 border-slate-800 px-4 py-2 rounded-sm"
 					>
-						Create a Project
+						Create a New Project
 					</NuxtLink>
 				</ClientOnly>
 			</div>
@@ -97,8 +97,8 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Header from "~/components/Header.vue";
-import { useAuthStore } from "~/store/auth";
-const user = useAuthStore();
+import { useUserStore } from "~/store/user";
+const user = useUserStore();
 
 onMounted(async () => {});
 
@@ -116,12 +116,6 @@ const featuredProjects = [
 		image: "project2.jpg",
 	},
 	// Add more project data...
-];
-
-const categories = [
-	{ name: "Art", icon: "icon-art" },
-	{ name: "Music", icon: "icon-music" },
-	// Add more category data...
 ];
 </script>
 

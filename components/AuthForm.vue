@@ -142,9 +142,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Loader2Icon } from "lucide-vue-next";
-import { useAuthStore } from "~/store/auth";
+import { useUserStore } from "~/store/user";
 
-const user = useAuthStore();
+const user = useUserStore();
 
 // * conditonally render fields based on which form type is being used
 const formSchema = toTypedSchema(

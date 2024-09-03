@@ -64,7 +64,7 @@
 									<Avatar>
 										<AvatarImage
 											:src="
-												user.current
+												user.current.profile_image
 													? user.current.profile_image
 													: 'https://github.com/radix-vue.png'
 											"
@@ -125,21 +125,22 @@ import {
 	DropdownMenuContent,
 } from "./ui/dropdown-menu";
 import { Loader2Icon } from "lucide-vue-next";
-import { useAuthStore } from "~/store/auth";
+import { useUserStore } from "~/store/user";
 
-const user = useAuthStore();
+const user = useUserStore();
 
 const navLinks = ref([
-	{ label: "My Projects", path: "/my-projects" },
+	{ label: "My Projects", path: "/projects" },
 	{ label: "Messages", path: "/messages" },
 	{ label: "Profile", path: "/profile" },
 ]);
+
 // State to manage mobile menu visibility
 const isMobileMenuOpen = ref(false);
 
 onMounted(async () => {
 	if (user.isAuthenticated) {
-		user.fetchCurrentUser();
+		await user.fetchCurrentUser();
 	}
 });
 </script>

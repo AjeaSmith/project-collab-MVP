@@ -2,11 +2,12 @@ import { defineStore } from "pinia";
 import { account } from "~/appwrite";
 import {
 	createUserAccount,
+	getAllUsers,
 	getCurrentUser,
 	signInAccount,
 } from "~/lib/appwrite/api";
 
-export const useAuthStore = defineStore("auth", () => {
+export const useUserStore = defineStore("user", () => {
 	// ---- PROPERTIES -----
 	const loading = ref(false);
 	const error = ref(null);
@@ -67,7 +68,7 @@ export const useAuthStore = defineStore("auth", () => {
 		await account.deleteSession("current"); // Delete Appwrite user session
 		current.value = null; // Clear current ref
 		isAuthenticated.value = false;
-		navigateTo("sign-in");
+		navigateTo("/");
 	};
 
 	const fetchCurrentUser = async () => {
@@ -79,12 +80,28 @@ export const useAuthStore = defineStore("auth", () => {
 		}
 	};
 
+	const fetchAllUsers = async () => {
+		loading.value = true;
+		try {
+			const users = await getAllUsers(current.value.$id);
+			loading.value = false;
+
+			return users;
+		} catch (err) {
+			console.error("Failed to fetch collaborators:", err);
+			error.value = err;
+		} finally {
+			loading.value = false;
+		}
+	};
+
 	return {
 		current,
 		error,
 		loading,
 		isAuthenticated,
 		fetchCurrentUser,
+		fetchAllUsers,
 		login,
 		logout,
 		register,

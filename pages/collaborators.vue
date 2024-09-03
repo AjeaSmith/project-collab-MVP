@@ -18,7 +18,6 @@
 					class="border px-3 py-2 rounded-lg w-full"
 				/>
 			</div>
-
 			<!-- Filter by Location -->
 			<div>
 				<label for="location" class="block text-gray-700 font-medium mb-2"
@@ -32,7 +31,6 @@
 					class="border px-3 py-2 rounded-lg w-full"
 				/>
 			</div>
-
 			<!-- Filter by Availability -->
 			<div>
 				<label for="availability" class="block text-gray-700 font-medium mb-2"
@@ -50,9 +48,13 @@
 			</div>
 		</div>
 
+		<div v-if="isLoading">
+			<Loader2Icon class="animate-spin mx-auto text-blue-500 w-10 h-10" />
+		</div>
+
 		<!-- Collaborators Grid -->
 		<div
-			v-if="filteredCollaborators.length"
+			v-if="!isLoading && filteredCollaborators.length"
 			class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
 		>
 			<div
@@ -68,9 +70,8 @@
 				<p class="text-gray-600 mb-2">
 					Availability: {{ collaborator.availability }}
 				</p>
-
 				<router-link
-					:to="`/collaborators/${collaborator.id}`"
+					:to="`/collaborators/${collaborator.$id}`"
 					class="text-blue-500 hover:underline"
 				>
 					View Profile
@@ -79,34 +80,21 @@
 		</div>
 
 		<!-- No Results Message -->
-		<div v-else class="text-center text-gray-600">
+		<div v-if="!isLoading && !filteredCollaborators.length" class="text-center text-gray-600">
 			<p>No collaborators found matching your criteria.</p>
 		</div>
 	</section>
 </template>
 
 <script setup>
+import { Loader2Icon } from "lucide-vue-next";
 import { ref, computed } from "vue";
 import Header from "~/components/Header.vue";
+import { useUserStore } from "~/store/user";
+const user = useUserStore();
 
-const collaborators = ref([
-	// Sample data
-	{
-		id: 1,
-		name: "John Doe",
-		skills: ["JavaScript", "Vue.js", "Design"],
-		location: "New York, USA",
-		availability: "Full-time",
-	},
-	{
-		id: 2,
-		name: "Jane Smith",
-		skills: ["Python", "Data Science", "Machine Learning"],
-		location: "Remote",
-		availability: "Part-time",
-	},
-	// Add more collaborators as needed
-]);
+const collaborators = ref([]);
+const isLoading = ref(true);
 
 const filters = ref({
 	skills: "",
@@ -114,10 +102,14 @@ const filters = ref({
 	availability: "",
 });
 
-const applyFilters = () => {
-	// This function could be used to trigger filtering in a real application
-	console.log("Filters applied:", filters.value);
-};
+onMounted(async () => {
+	try {
+		await user.fetchCurrentUser();
+		collaborators.value = await user.fetchAllUsers();
+	} finally {
+		isLoading.value = false;
+	}
+});
 
 // Computed property to filter collaborators based on the selected filters
 const filteredCollaborators = computed(() => {
@@ -144,7 +136,7 @@ const filteredCollaborators = computed(() => {
 <style scoped>
 .container {
 	max-width: 1400px;
-    padding-inline: 1rem;
+	padding-inline: 1rem;
 }
 
 .bg-white {
