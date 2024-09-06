@@ -38,6 +38,7 @@
 				<div class="flex justify-between items-center">
 					<span class="text-sm text-gray-500">{{ project.category }}</span>
 					<router-link
+						v-if="user.isAuthenticated"
 						:to="`/projects/${project.$id}`"
 						class="text-blue-500 hover:underline"
 					>
@@ -53,8 +54,10 @@
 import Header from "~/components/Header.vue";
 import LoadingSpinner from "~/components/LoadingSpinner.vue";
 import { useProjectStore } from "~/store/project";
+import { useUserStore } from "~/store/user";
 
 const project = useProjectStore();
+const user = useUserStore();
 const projects = ref([]);
 const isLoading = ref(true);
 const searchQuery = ref("");

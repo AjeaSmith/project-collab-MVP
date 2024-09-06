@@ -71,7 +71,7 @@
 					Availability: {{ collaborator.availability }}
 				</p>
 				<router-link
-					:to="`/collaborators/${collaborator.$id}`"
+					:to="`/project/${collaborator.$id}`"
 					class="text-blue-500 hover:underline"
 				>
 					View Profile
@@ -80,7 +80,10 @@
 		</div>
 
 		<!-- No Results Message -->
-		<div v-if="!isLoading && !filteredCollaborators.length" class="text-center text-gray-600">
+		<div
+			v-if="!isLoading && !filteredCollaborators.length"
+			class="text-center text-gray-600"
+		>
 			<p>No collaborators found matching your criteria.</p>
 		</div>
 	</section>

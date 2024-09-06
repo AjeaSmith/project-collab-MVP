@@ -15,13 +15,13 @@ const pageTitle = computed(() => {
 		class="bg-gray-300 my-auto px-10 h-screen flex flex-col justify-center items-center p-3 space-y-5"
 	>
 		<section class="w-full flex mb-5 justify-between items-center">
-			<NuxtLink
+			<router-link
 				to="/"
 				class="flex items-center space-x-2 flex-auto text-blue-500"
 			>
 				<ArrowLeft />
 				<span>Back</span>
-			</NuxtLink>
+			</router-link>
 			<h1 class="text-3xl flex-auto">{{ pageTitle }}</h1>
 		</section>
 		<NuxtPage />

@@ -28,31 +28,30 @@
 					</svg>
 				</button>
 				<!-- Navigation Links -->
-				<nav
-					:class="{ block: isMobileMenuOpen, hidden: !isMobileMenuOpen }"
-					class="px-4 py-4 flex-col absolute top-[7%] left-0 w-full bg-white | lg:w-auto lg:bg-transparent lg:flex lg:relative lg:space-x-6 lg:flex-row lg:px-0 lg:py-0"
-				>
-					<NuxtLink
-						activeClass="text-blue-500"
-						to="/explore"
-						class="block py-2 text-gray-600 hover:text-gray-900"
-						>Explore Projects</NuxtLink
+				<nav>
+					<ul
+						:class="{ block: isMobileMenuOpen, hidden: !isMobileMenuOpen }"
+						class="px-4 py-4 flex-col absolute top-[7%] left-0 w-full bg-white | lg:w-auto lg:bg-transparent lg:flex lg:relative lg:space-x-6 lg:flex-row lg:px-0 lg:py-0"
 					>
-
-					<NuxtLink
-						activeClass="text-blue-500"
-						to="/collaborators"
-						class="block py-2 text-gray-600 hover:text-gray-900"
-						>Find Collaborators</NuxtLink
-					>
-					<template v-if="user.isAuthenticated" v-for="link in navLinks">
-						<NuxtLink
-							:to="link.path"
-							activeClass="text-blue-500"
-							class="block py-2 text-gray-600 hover:text-gray-900"
-							>{{ link.label }}</NuxtLink
-						>
-					</template>
+						<li>
+							<router-link
+								active-class="text-blue-500"
+								to="/explore"
+								class="block py-2 hover:text-blue-500"
+								>Explore Projects</router-link
+							>
+						</li>
+						<template v-if="user.isAuthenticated" v-for="link in navLinks">
+							<li>
+								<router-link
+									:to="link.path"
+									active-class="text-blue-500"
+									class="block py-2 hover:text-blue-500"
+									>{{ link.label }}</router-link
+								>
+							</li>
+						</template>
+					</ul>
 				</nav>
 				<!-- User Menu -->
 				<div class="flex items-center space-x-4">
@@ -103,10 +102,10 @@
 						</DropdownMenu>
 					</template>
 					<template v-else>
-						<NuxtLink
+						<router-link
 							to="sign-in"
-							class="bg-slate-700 text-white hover:bg-white hover:text-slate-700 border-2 border-slate-800 px-2.5 py-2 rounded-sm"
-							>Sign in to Create Project</NuxtLink
+							class="bg-blue-500 text-white hover:bg-blue-600 hover:text-white px-2.5 py-2 rounded-sm"
+							>Sign in or Create account</router-link
 						>
 					</template>
 				</div>
@@ -132,6 +131,7 @@ const user = useUserStore();
 
 const navLinks = ref([
 	{ label: "My Projects", path: "/projects" },
+	{ label: "Find Collaborators", path: "/collaborators" },
 	{ label: "Messages", path: "/messages" },
 	{ label: "Profile", path: "/profile" },
 ]);

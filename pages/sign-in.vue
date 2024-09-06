@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-definePageMeta({
-	middleware: "check-session",
-});
+// definePageMeta({
+// 	middleware: "check-session",
+// });
 </script>

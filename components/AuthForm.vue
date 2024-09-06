@@ -107,14 +107,14 @@
 						? "Already have an account?"
 						: "Don't have an account?"
 				}}
-				<NuxtLink
+				<router-link
 					class="text-blue-600 hover:underline"
 					v-if="type === 'sign-up'"
 					to="sign-in"
-					>Sign in</NuxtLink
+					>Sign in</router-link
 				>
-				<NuxtLink class="text-blue-600 hover:underline" v-else to="sign-up"
-					>Sign up</NuxtLink
+				<router-link class="text-blue-600 hover:underline" v-else to="sign-up"
+					>Sign up</router-link
 				>
 			</p>
 		</div>
