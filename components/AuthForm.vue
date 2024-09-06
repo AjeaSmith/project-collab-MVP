@@ -1,16 +1,22 @@
 <template>
 	<div
-		class="min-h-screen flex flex-col gap-y-5 items-center justify-center bg-gray-50"
+		:class="`flex flex-col items-center bg-gray-10 ${
+			type !== 'sign-up' ? 'justify-center h-screen' : ''
+		}`"
 	>
-		<h1 class="text-4xl font-bold text-center text-gray-800">
+		<h1 class="text-3xl font-bold text-center text-gray-800">
 			Join Our Community of Creative Innovators
 		</h1>
-		<p class="mb-5 text-xl text-center text-gray-600 max-w-xl">
+		<p class="mb-5 text-lg text-center text-gray-600 max-w-xl">
 			Share your ideas, and collaborate on groundbreaking projects.
 		</p>
-		<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+		<div
+			:class="`bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl ${
+				type === 'sign-up' ? 'h-[85vh]' : ''
+			}`"
+		>
 			<!-- Page Title -->
-			<h2 class="text-2xl font-bold text-gray-800 text-center mb-6">
+			<h2 class="text-2xl font-bold text-gray-800 text-center">
 				{{ type === "sign-up" ? "Sign up" : "Sign in" }}
 			</h2>
 
@@ -19,60 +25,99 @@
 			</div>
 
 			<!-- Auth Form -->
-			<form @submit="onSubmit">
-				<template v-if="type === 'sign-up'">
-					<FormField v-slot="{ componentField }" name="name">
+			<ClientOnly>
+				<form @submit="onSubmit" class="h-[100%]">
+					<template v-if="type === 'sign-up'">
+						<FormField v-slot="{ componentField }" name="name">
+							<FormItem class="mb-4">
+								<FormLabel class="block text-md text-gray-700 font-medium mb-2"
+									>Name</FormLabel
+								>
+								<FormControl>
+									<Input
+										type="text"
+										placeholder="John Doe"
+										v-bind="componentField"
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						</FormField>
+						<FormField v-slot="{ componentField }" name="bio">
+							<FormItem class="mb-4">
+								<FormLabel class="block text-md text-gray-700 font-medium mb-2"
+									>Bio</FormLabel
+								>
+								<FormControl>
+									<Textarea
+										type="text"
+										placeholder="Write something about yourself..."
+										v-bind="componentField"
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						</FormField>
+
+						<div class="flex space-x-4">
+							<FormField
+								v-slot="{ componentField }"
+								name="skills"
+								class="flex-1"
+							>
+								<FormItem class="mb-4 flex-1">
+									<FormLabel
+										class="block text-md text-gray-700 font-medium mb-2"
+										>Skills</FormLabel
+									>
+									<FormControl>
+										<Input
+											type="text"
+											placeholder="e.g. React, Node (comma seperated)"
+											v-bind="componentField"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</FormField>
+							<FormField v-slot="{ componentField }" name="location">
+								<FormItem class="mb-4 flex-1">
+									<FormLabel
+										class="block text-md text-gray-700 font-medium mb-2"
+										>Location</FormLabel
+									>
+									<FormControl>
+										<Input
+											type="text"
+											placeholder="e.g. Michigan"
+											v-bind="componentField"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</FormField>
+						</div>
+					</template>
+					<!-- Email Input -->
+					<FormField v-slot="{ componentField }" name="email">
 						<FormItem class="mb-4">
 							<FormLabel class="block text-md text-gray-700 font-medium mb-2"
-								>Name</FormLabel
+								>Email</FormLabel
 							>
 							<FormControl>
 								<Input
-									type="text"
-									placeholder="John Doe"
+									type="email"
+									placeholder="e.g johndoe@mail.com"
 									v-bind="componentField"
 								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					</FormField>
-				</template>
-				<!-- Email Input -->
-				<FormField v-slot="{ componentField }" name="email">
-					<FormItem class="mb-4">
-						<FormLabel class="block text-md text-gray-700 font-medium mb-2"
-							>Email</FormLabel
-						>
-						<FormControl>
-							<Input
-								type="email"
-								placeholder="e.g johndoe@mail.com"
-								v-bind="componentField"
-							/>
-						</FormControl>
-						<FormMessage />
-					</FormItem>
-				</FormField>
-				<FormField v-slot="{ componentField }" name="password">
-					<FormItem class="mb-4">
-						<FormLabel class="block text-md text-gray-700 font-medium mb-2"
-							>Password</FormLabel
-						>
-						<FormControl>
-							<Input
-								type="password"
-								placeholder="********"
-								v-bind="componentField"
-							/>
-						</FormControl>
-						<FormMessage />
-					</FormItem>
-				</FormField>
-				<template v-if="type === 'sign-up'">
-					<FormField v-slot="{ componentField }" name="confirmPassword">
+					<FormField v-slot="{ componentField }" name="password">
 						<FormItem class="mb-4">
 							<FormLabel class="block text-md text-gray-700 font-medium mb-2"
-								>Confirm Password</FormLabel
+								>Password</FormLabel
 							>
 							<FormControl>
 								<Input
@@ -84,39 +129,58 @@
 							<FormMessage />
 						</FormItem>
 					</FormField>
-				</template>
+					<template v-if="type === 'sign-up'">
+						<FormField v-slot="{ componentField }" name="confirmPassword">
+							<FormItem class="mb-4">
+								<FormLabel class="block text-md text-gray-700 font-medium mb-2"
+									>Confirm Password</FormLabel
+								>
+								<FormControl>
+									<Input
+										type="password"
+										placeholder="********"
+										v-bind="componentField"
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						</FormField>
+					</template>
 
-				<!-- login Button -->
-				<Button type="submit" class="w-full" :disabled="user.loading">
-					<div
-						v-if="(type === 'sign-up' || type === 'sign-in') && user.loading"
-						class="flex items-center"
-					>
-						<LoadingSpinner />
-						Authenticating
-					</div>
-					<template v-else>{{
-						type === "sign-up" ? "Register" : "Log in"
-					}}</template>
-				</Button>
-			</form>
-
-			<p class="text-center text-gray-600 mt-4">
-				{{
-					type === "sign-up"
-						? "Already have an account?"
-						: "Don't have an account?"
-				}}
-				<router-link
-					class="text-blue-600 hover:underline"
-					v-if="type === 'sign-up'"
-					to="sign-in"
-					>Sign in</router-link
-				>
-				<router-link class="text-blue-600 hover:underline" v-else to="sign-up"
-					>Sign up</router-link
-				>
-			</p>
+					<!-- login Button -->
+					<Button type="submit" class="w-full" :disabled="user.loading">
+						<div
+							v-if="(type === 'sign-up' || type === 'sign-in') && user.loading"
+							class="flex items-center"
+						>
+							<LoadingSpinner />
+							Authenticating
+						</div>
+						<template v-else>{{
+							type === "sign-up" ? "Register" : "Log in"
+						}}</template>
+					</Button>
+					<p class="text-center text-gray-600 mt-4">
+						{{
+							type === "sign-up"
+								? "Already have an account?"
+								: "Don't have an account?"
+						}}
+						<router-link
+							class="text-blue-600 hover:underline"
+							v-if="type === 'sign-up'"
+							to="sign-in"
+							>Sign in</router-link
+						>
+						<router-link
+							class="text-blue-600 hover:underline"
+							v-else
+							to="sign-up"
+							>Sign up</router-link
+						>
+					</p>
+				</form>
+			</ClientOnly>
 		</div>
 	</div>
 </template>
@@ -152,12 +216,9 @@ const formSchema = toTypedSchema(
 		...(props.type === "sign-up"
 			? {
 					name: z.string().min(4),
-			  }
-			: {}),
-		email: z.string().email(),
-		password: z.string().min(8),
-		...(props.type === "sign-up"
-			? {
+					bio: z.string().min(10),
+					skills: z.string(),
+					location: z.string(),
 					confirmPassword: z
 						.string()
 						.min(8)
@@ -166,6 +227,8 @@ const formSchema = toTypedSchema(
 						}),
 			  }
 			: {}),
+		email: z.string().email(),
+		password: z.string().min(8),
 	})
 );
 
