@@ -4,17 +4,15 @@
 			type !== 'sign-up' ? 'justify-center h-screen' : ''
 		}`"
 	>
-		<h1 class="text-3xl font-bold text-center text-gray-800">
-			Join Our Community of Creative Innovators
-		</h1>
-		<p class="mb-5 text-lg text-center text-gray-600 max-w-xl">
-			Share your ideas, and collaborate on groundbreaking projects.
-		</p>
-		<div
-			:class="`bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl ${
-				type === 'sign-up' ? 'h-[85vh]' : ''
-			}`"
-		>
+		<section class="flex-1">
+			<h1 class="text-3xl font-bold text-center text-gray-800">
+				Join Our Community of Creative Innovators
+			</h1>
+			<p class="mb-5 text-lg text-center text-gray-600 max-w-xl">
+				Share your ideas, and collaborate on groundbreaking projects.
+			</p>
+		</section>
+		<div class="bg-white p-8 mt-2 rounded-lg shadow-lg w-full max-w-2xl">
 			<!-- Page Title -->
 			<h2 class="text-2xl font-bold text-gray-800 text-center">
 				{{ type === "sign-up" ? "Sign up" : "Sign in" }}
@@ -26,7 +24,7 @@
 
 			<!-- Auth Form -->
 			<ClientOnly>
-				<form @submit="onSubmit" class="h-[100%]">
+				<form @submit="onSubmit">
 					<template v-if="type === 'sign-up'">
 						<FormField v-slot="{ componentField }" name="name">
 							<FormItem class="mb-4">

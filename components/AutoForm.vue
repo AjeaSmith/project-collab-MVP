@@ -2,14 +2,18 @@
 	<div v-if="project.error" class="my-3 text-red-500 text-xl">
 		{{ project.error }}
 	</div>
-	<ClientOnly>
-		<template v-if="isEditPageLoading">
-			<div class="flex justify-center mt-[200px] h-screen">
-				<LoadingSpinner className="w-[60px] h-[60px]" />
-			</div>
-		</template>
+
+	<template v-if="isEditPageLoading">
+		<div class="flex justify-center mt-[200px] h-screen">
+			<LoadingSpinner className="w-[60px] h-[60px]" />
+		</div>
+	</template>
+
+	<template v-else>
+		<h1 class="text-2xl font-semibold">
+			{{ isEditMode ? "Edit Project" : "Create New Project" }}
+		</h1>
 		<AutoForm
-			v-else
 			:form="form"
 			class="w-full lg:w-2/3 lg:px-0 space-y-6"
 			:schema="schema"
@@ -17,14 +21,10 @@
 				title: {
 					label: 'Project Title',
 				},
-				tags: {
-					inputProps: {
-						placeholder: 'Enter tags (comma-separated)',
-					},
-				},
+
 				category: {
 					inputProps: {
-						placeholder: 'e.g. Art, Music, Tech',
+						placeholder: 'Select category',
 					},
 				},
 				description: {
@@ -33,6 +33,9 @@
 				},
 				status: {
 					label: 'Project status',
+					inputProps: {
+						placeholder: 'Select status',
+					},
 				},
 				file: {
 					label: 'Upload Image',
@@ -52,7 +55,7 @@
 				<template v-else> Submit </template>
 			</Button>
 		</AutoForm>
-	</ClientOnly>
+	</template>
 </template>
 
 <script setup>
@@ -88,15 +91,10 @@ const schema = z.object({
 		message: "Description must be at least 10 characters.",
 	}),
 
-	tags: z.string({
-		required_error: "Tags is required.",
-	}),
-	category: z.string({
-		required_error: "Category is required.",
-	}),
+	category: z.enum(["tech", "art", "web design", "web development", "mobile"]),
 	status: z.enum(["open", "in progress"]),
 
-	file: z.string().optional(),
+	file: z.string(),
 });
 
 const form = useForm({
@@ -113,12 +111,10 @@ onMounted(async () => {
 
 		isEditPageLoading.value = false;
 
-		const tagsString = projectData.tags.join(", ");
 		if (projectData) {
 			projectImage.value = projectData.file;
 			form.setFieldValue("title", projectData.title);
 			form.setFieldValue("description", projectData.description);
-			form.setFieldValue("tags", tagsString);
 			form.setFieldValue("category", projectData.category);
 			form.setFieldValue("status", projectData.status);
 		}
@@ -129,10 +125,10 @@ async function onSubmit(values) {
 	if (isEditMode.value) {
 		// TODO: Test out edit project method
 		await project.edittingProject(route.params.id, values);
-		router.push("/my-projects");
+		router.push("/projects");
 	} else {
 		await project.createNewProject(values, user.current.$id);
-		router.push("/my-projects");
+		router.push("/projects");
 	}
 }
 </script>

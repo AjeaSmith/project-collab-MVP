@@ -73,6 +73,7 @@ export const useProjectStore = defineStore("project", () => {
 			loading.value = false;
 		}
 	};
+	
 	const edittingProject = async (projectId, data) => {
 		loading.value = true;
 		const tagsArray = data.tags.split(",").map((tag) => tag.trim());

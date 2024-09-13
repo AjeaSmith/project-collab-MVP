@@ -41,32 +41,34 @@
 					<router-link
 						v-for="project in featuredProjects"
 						:key="project.$id"
-						:to="`project/${project.$id}`"
+						:to="`projects/${project.$id}`"
 						class="shadow-lg"
 					>
-						<Card>
+						<Card class="h-full">
 							<img
 								:src="project.file"
 								alt="Project image"
 								class="w-full h-48 object-cover rounded-t-lg"
 							/>
-							<div class="p-4">
-								<h3 class="text-xl font-semibold text-gray-800">
-									{{
-										truncate(project.title, {
-											length: 30,
-											separator: " ",
-										})
-									}}
-								</h3>
-								<p class="text-gray-600 my-2">
-									{{
-										truncate(project.description, {
-											length: 120,
-											separator: " ",
-										})
-									}}
-								</p>
+							<div class="h-[50%] flex flex-col justify-between p-4">
+								<section>
+									<h3 class="text-xl font-semibold text-gray-800">
+										{{
+											truncate(project.title, {
+												length: 30,
+												separator: " ",
+											})
+										}}
+									</h3>
+									<p class="text-gray-600 my-2">
+										{{
+											truncate(project.description, {
+												length: 120,
+												separator: " ",
+											})
+										}}
+									</p>
+								</section>
 								<p
 									v-if="user.isAuthenticated"
 									class="text-blue-500 hover:text-blue-700"

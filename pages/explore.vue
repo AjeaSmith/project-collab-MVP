@@ -31,10 +31,18 @@
 			<div
 				v-for="project in filteredProjects"
 				:key="project.id"
-				class="bg-white p-6 rounded-lg shadow-lg"
+				class="flex flex-col justify-between bg-white p-6 rounded-lg shadow-lg"
 			>
-				<h2 class="text-xl font-semibold mb-2">{{ project.title }}</h2>
-				<p class="text-gray-600 mb-4">{{ project.description }}</p>
+				<div>
+					<h2 class="text-xl font-semibold mb-2">{{ project.title }}</h2>
+					<p class="text-gray-600 mb-4">
+						{{
+							truncate(project.description, {
+								length: 100,
+							})
+						}}
+					</p>
+				</div>
 				<div class="flex justify-between items-center">
 					<span class="text-sm text-gray-500">{{ project.category }}</span>
 					<router-link
@@ -51,6 +59,7 @@
 </template>
 
 <script setup>
+import { truncate } from "lodash";
 import Header from "~/components/Header.vue";
 import LoadingSpinner from "~/components/LoadingSpinner.vue";
 import { useProjectStore } from "~/store/project";

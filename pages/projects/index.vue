@@ -1,7 +1,14 @@
 <template>
 	<Header />
+	<!-- TODO: implement delete project  -->
+	<!-- TODO: add more options for delete and edit actions  -->
 	<section class="container mx-auto py-8">
-		<h1 class="text-3xl font-bold mb-6">My Projects</h1>
+		<h1 class="flex items-center text-3xl font-bold mb-6">
+			My Projects
+			<router-link to="/projects/new" class="ml-2 text-blue-500">
+				<PlusIcon />
+			</router-link>
+		</h1>
 
 		<div v-if="isLoading">
 			<LoadingSpinner className="mx-auto w-10 h-10" />
@@ -26,10 +33,21 @@
 			<div
 				v-for="project in userProjects"
 				:key="project.$id"
-				class="bg-white p-6 rounded-lg shadow-lg"
+				class="flex flex-col justify-between bg-white p-6 rounded-lg shadow-lg"
 			>
-				<h2 class="text-xl font-semibold mb-2">{{ project.title }}</h2>
-				<p class="text-gray-600 mb-4">{{ project.description }}</p>
+				<section>
+					<div class="flex justify-between items-center">
+						<h2 class="text-xl font-semibold mb-2">{{ project.title }}</h2>
+						<Trash2Icon class="text-red-500" />
+					</div>
+					<p class="text-gray-600 mb-4">
+						{{
+							truncate(project.description, {
+								length: 100,
+							})
+						}}
+					</p>
+				</section>
 
 				<div class="flex justify-between items-center">
 					<router-link
@@ -50,10 +68,12 @@
 	</section>
 </template>
 <script setup>
+import { PlusIcon, Trash2Icon } from "lucide-vue-next";
 import Header from "~/components/Header.vue";
 import LoadingSpinner from "~/components/LoadingSpinner.vue";
 import { useProjectStore } from "~/store/project";
 import { useUserStore } from "~/store/user";
+import { truncate } from "lodash";
 
 const project = useProjectStore();
 const user = useUserStore();
