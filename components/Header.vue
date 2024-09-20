@@ -91,7 +91,11 @@
 									<LoadingSpinner className="size-9 mx-auto" />
 								</template>
 								<DropdownMenuItem>
+									<template v-if="user.loading">
+										<LoadingSpinner />
+									</template>
 									<button
+										v-else
 										@click="user.logout"
 										class="rounded-sm border-2 px-4 py-1 border-blue-500"
 									>

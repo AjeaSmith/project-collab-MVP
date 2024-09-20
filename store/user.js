@@ -31,9 +31,10 @@ export const useUserStore = defineStore("user", () => {
 					break;
 
 				default:
-					error.value = err;
+					error.value = err.message;
 					break;
 			}
+			console.log("err create account:", err);
 		} finally {
 			loading.value = false;
 		}
@@ -65,7 +66,9 @@ export const useUserStore = defineStore("user", () => {
 	};
 
 	const logout = async () => {
+		loading.value = true;
 		await account.deleteSession("current"); // Delete Appwrite user session
+		loading.value = false;
 		current.value = null; // Clear current ref
 		isAuthenticated.value = false;
 		navigateTo("/");

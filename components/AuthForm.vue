@@ -4,7 +4,7 @@
 			type !== 'sign-up' ? 'justify-center h-screen' : ''
 		}`"
 	>
-		<section class="flex-1">
+		<section>
 			<h1 class="text-3xl font-bold text-center text-gray-800">
 				Join Our Community of Creative Innovators
 			</h1>
@@ -57,44 +57,63 @@
 							</FormItem>
 						</FormField>
 
-						<div class="flex space-x-4">
-							<FormField
-								v-slot="{ componentField }"
-								name="skills"
-								class="flex-1"
-							>
-								<FormItem class="mb-4 flex-1">
-									<FormLabel
-										class="block text-md text-gray-700 font-medium mb-2"
-										>Skills</FormLabel
-									>
+						<FormField v-slot="{ value }" name="skills">
+							<FormItem class="mb-4">
+								<FormLabel>Skills</FormLabel>
+								<FormControl>
+									<TagsInput :model-value="value">
+										<TagsInputItem
+											v-for="item in value"
+											:key="item"
+											:value="item"
+										>
+											<TagsInputItemText />
+											<TagsInputItemDelete />
+										</TagsInputItem>
+
+										<TagsInputInput placeholder="Skills..." />
+									</TagsInput>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						</FormField>
+
+						<FormField v-slot="{ componentField }" name="availability">
+							<FormItem class="mb-4">
+								<FormLabel>Availability</FormLabel>
+
+								<Select v-bind="componentField">
 									<FormControl>
-										<Input
-											type="text"
-											placeholder="e.g. React, Node (comma seperated)"
-											v-bind="componentField"
-										/>
+										<SelectTrigger>
+											<SelectValue placeholder="Select your Availability" />
+										</SelectTrigger>
 									</FormControl>
-									<FormMessage />
-								</FormItem>
-							</FormField>
-							<FormField v-slot="{ componentField }" name="location">
-								<FormItem class="mb-4 flex-1">
-									<FormLabel
-										class="block text-md text-gray-700 font-medium mb-2"
-										>Location</FormLabel
-									>
-									<FormControl>
-										<Input
-											type="text"
-											placeholder="e.g. Michigan"
-											v-bind="componentField"
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							</FormField>
-						</div>
+									<SelectContent>
+										<SelectGroup>
+											<SelectItem value="part-time"> Part Time </SelectItem>
+											<SelectItem value="full-time"> Full Time </SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						</FormField>
+
+						<FormField v-slot="{ componentField }" name="location">
+							<FormItem class="mb-4 flex-1">
+								<FormLabel class="block text-md text-gray-700 font-medium mb-2"
+									>Location</FormLabel
+								>
+								<FormControl>
+									<Input
+										type="text"
+										placeholder="e.g. Michigan"
+										v-bind="componentField"
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						</FormField>
 					</template>
 					<!-- Email Input -->
 					<FormField v-slot="{ componentField }" name="email">
@@ -205,6 +224,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { useUserStore } from "~/store/user";
 import LoadingSpinner from "./LoadingSpinner.vue";
+import TagsInput from "./ui/tags-input/TagsInput.vue";
+import TagsInputItem from "./ui/tags-input/TagsInputItem.vue";
+import TagsInputItemText from "./ui/tags-input/TagsInputItemText.vue";
+import TagsInputItemDelete from "./ui/tags-input/TagsInputItemDelete.vue";
+import TagsInputInput from "./ui/tags-input/TagsInputInput.vue";
 
 const user = useUserStore();
 
@@ -215,7 +239,11 @@ const formSchema = toTypedSchema(
 			? {
 					name: z.string().min(4),
 					bio: z.string().min(10),
-					skills: z.string(),
+					skills: z
+						.array(z.string())
+						.min(2, "At least 2 skills is required")
+						.max(10, "maxiumn 10 skills allowed"),
+					availability: z.string(),
 					location: z.string(),
 					confirmPassword: z
 						.string()
@@ -232,6 +260,9 @@ const formSchema = toTypedSchema(
 
 const form = useForm({
 	validationSchema: formSchema,
+	initialValues: {
+		skills: [],
+	},
 });
 
 const onSubmit = form.handleSubmit(async (values) => {

@@ -90,9 +90,7 @@ const filteredProjects = computed(() => {
 		return (
 			project.title.toLowerCase().includes(lowerCaseQuery) ||
 			project.description.toLowerCase().includes(lowerCaseQuery) ||
-			project.tags.includes(lowerCaseQuery) ||
-			project.category.toLowerCase().includes(lowerCaseQuery) ||
-			project.status.toLowerCase().includes(lowerCaseQuery)
+			project.category.toLowerCase().includes(lowerCaseQuery)
 		);
 	});
 });

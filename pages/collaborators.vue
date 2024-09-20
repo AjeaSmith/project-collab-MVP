@@ -64,11 +64,13 @@
 			>
 				<h2 class="text-xl font-semibold mb-2">{{ collaborator.name }}</h2>
 				<p class="text-gray-600 mb-2">
-					Skills: {{ collaborator.skills.join(", ") }}
+					<b>Skills:</b> {{ collaborator.skills.join(", ") }}
 				</p>
-				<p class="text-gray-600 mb-2">Location: {{ collaborator.location }}</p>
 				<p class="text-gray-600 mb-2">
-					Availability: {{ collaborator.availability }}
+					<b>Location</b>: {{ collaborator.location }}
+				</p>
+				<p class="text-gray-600 mb-2">
+					<b>Availability:</b> {{ collaborator.availability }}
 				</p>
 				<router-link
 					:to="`/project/${collaborator.$id}`"

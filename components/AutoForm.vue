@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO: add success and error messages with toast -->
 	<div v-if="project.error" class="my-3 text-red-500 text-xl">
 		{{ project.error }}
 	</div>
@@ -102,11 +103,12 @@ const form = useForm({
 });
 
 onMounted(async () => {
+	await user.fetchCurrentUser();
+
 	if (route.params.id) {
 		isEditPageLoading.value = true;
 		isEditMode.value = true;
 
-		await user.fetchCurrentUser();
 		const projectData = await project.getProjectById(route.params.id);
 
 		isEditPageLoading.value = false;

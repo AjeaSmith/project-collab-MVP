@@ -14,7 +14,7 @@
 			/>
 			<div>
 				<h1 class="text-3xl font-bold">{{ user.current.name }}</h1>
-				<p class="text-gray-600">{{ user.current.bio }}</p>
+				<p class="text-gray-600 max-w-xl">{{ user.current.bio }}</p>
 				<div class="mt-4">
 					<h2 class="text-xl font-semibold mb-2">Skills</h2>
 					<ul class="flex flex-wrap gap-2">
@@ -35,7 +35,7 @@
 			<h2 class="flex items-center text-2xl font-semibold mb-4">
 				Projects
 				<router-link class="ml-2" to="/projects/new">
-					<PlusIcon class="text-blue-500"/>
+					<PlusIcon class="text-blue-500" />
 				</router-link>
 			</h2>
 
@@ -50,7 +50,13 @@
 					class="bg-white p-6 rounded-lg shadow-lg"
 				>
 					<h3 class="text-xl font-semibold mb-2">{{ project.title }}</h3>
-					<p class="text-gray-600 mb-4">{{ project.description }}</p>
+					<p class="text-gray-600 mb-4">
+						{{
+							truncate(project.description, {
+								length: 100,
+							})
+						}}
+					</p>
 					<router-link
 						:to="`/projects/${project.$id}`"
 						class="text-blue-500 hover:underline"
@@ -104,6 +110,7 @@
 </template>
 
 <script setup>
+import { truncate } from "lodash";
 import { PlusIcon } from "lucide-vue-next";
 import { ref, onMounted } from "vue";
 import LoadingProfile from "~/components/LoadingProfile.vue";
@@ -146,7 +153,6 @@ onMounted(async () => {
 		isLoading.value = false;
 	}
 
-	console.log(user.current);
 	// Fetch profile, projects, and collaboration requests data from the API
 });
 </script>

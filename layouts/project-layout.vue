@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-vue-next";
 </script>
 
 <template>
-	<main class="bg-gray-200 p-4 h-screen">
+	<main class="bg-gray-200 p-4 h-full">
 		<section class="w-full flex mb-5 justify-between items-center">
 			<router-link
 				to="/"
@@ -17,4 +17,5 @@ import { ArrowLeft } from "lucide-vue-next";
 			<NuxtPage />
 		</section>
 	</main>
+
 </template>

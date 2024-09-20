@@ -56,13 +56,11 @@ export const useProjectStore = defineStore("project", () => {
 
 	const createNewProject = async (projectData, userId) => {
 		loading.value = true;
-		const tagsArray = projectData.tags.split(",").map((tag) => tag.trim());
 
 		try {
 			const { imageURL } = await useImageUpload(projectData.file);
 			await createProject({
 				...projectData,
-				tags: tagsArray,
 				file: imageURL.href,
 				creator: userId,
 			});
@@ -73,7 +71,7 @@ export const useProjectStore = defineStore("project", () => {
 			loading.value = false;
 		}
 	};
-	
+
 	const edittingProject = async (projectId, data) => {
 		loading.value = true;
 		const tagsArray = data.tags.split(",").map((tag) => tag.trim());

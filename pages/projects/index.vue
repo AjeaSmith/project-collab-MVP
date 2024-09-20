@@ -38,7 +38,7 @@
 				<section>
 					<div class="flex justify-between items-center">
 						<h2 class="text-xl font-semibold mb-2">{{ project.title }}</h2>
-						<Trash2Icon class="text-red-500" />
+						<AlertDialog :projectId="project.$id" />
 					</div>
 					<p class="text-gray-600 mb-4">
 						{{
@@ -68,7 +68,7 @@
 	</section>
 </template>
 <script setup>
-import { PlusIcon, Trash2Icon } from "lucide-vue-next";
+import { PlusIcon } from "lucide-vue-next";
 import Header from "~/components/Header.vue";
 import LoadingSpinner from "~/components/LoadingSpinner.vue";
 import { useProjectStore } from "~/store/project";
