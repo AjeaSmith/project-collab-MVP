@@ -13,7 +13,20 @@
 				class="w-32 h-32 rounded-full mb-4 md:mb-0"
 			/>
 			<div>
-				<h1 class="text-3xl font-bold">{{ user.current.name }}</h1>
+				<div class="flex justify-between mb-4">
+					<span class="flex h-5 items-center space-x-2">
+						<h1 class="text-3xl font-bold">
+							{{ user.current.name }}
+						</h1>
+						<Separator orientation="vertical" />
+						<small class="italic">{{ user.current.location }}</small>
+						<Separator orientation="vertical" />
+						<small>{{ user.current.availability }}</small>
+					</span>
+					<router-link to="profile/edit">
+						<Edit class="w-6 h-6 text-blue-500 cursor-pointer" />
+					</router-link>
+				</div>
 				<p class="text-gray-600 max-w-xl">{{ user.current.bio }}</p>
 				<div class="mt-4">
 					<h2 class="text-xl font-semibold mb-2">Skills</h2>
@@ -111,30 +124,14 @@
 
 <script setup>
 import { truncate } from "lodash";
-import { PlusIcon } from "lucide-vue-next";
+import { Edit, PlusIcon } from "lucide-vue-next";
 import { ref, onMounted } from "vue";
 import LoadingProfile from "~/components/LoadingProfile.vue";
 import LoadingProjects from "~/components/LoadingProjects.vue";
+import { Separator } from "~/components/ui/separator";
 import { useUserStore } from "~/store/user";
 const user = useUserStore();
 const isLoading = ref(true);
-
-// const profile = ref({
-// 	avatarUrl: "https://via.placeholder.com/150", // Replace with actual avatar URL
-// 	name: "John Doe",
-// 	bio: "Software developer with a passion for open-source projects.",
-// 	skills: ["JavaScript", "Vue.js", "Node.js", "CSS"],
-// });
-
-const projects = ref([
-	{
-		id: 1,
-		title: "Project Alpha",
-		description: "A project about something interesting.",
-	},
-	{ id: 2, title: "Project Beta", description: "Another exciting project." },
-	// Add more projects as needed
-]);
 
 const collaborationRequests = ref([
 	{
@@ -152,8 +149,6 @@ onMounted(async () => {
 	} finally {
 		isLoading.value = false;
 	}
-
-	// Fetch profile, projects, and collaboration requests data from the API
 });
 </script>
 

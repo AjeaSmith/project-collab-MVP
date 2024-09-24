@@ -77,19 +77,16 @@
 									<LoadingSpinner />
 								</template>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent class="w-48">
+							<DropdownMenuContent class="w-48 space-y-1.5">
 								<DropdownMenuItem href="/notifications"
 									>Notifications</DropdownMenuItem
 								>
-								<div
-									v-if="user.current"
-									class="text-sm my-2 mx-2 text-blue-400"
-								>
-									{{ user.current.name }}
-								</div>
-								<template v-else>
-									<LoadingSpinner className="size-9 mx-auto" />
-								</template>
+								<DropdownMenuItem>
+									<router-link to="/profile" class="text-sm mx-2 text-blue-400">
+										{{ user.current.name }}
+									</router-link>
+								</DropdownMenuItem>
+
 								<DropdownMenuItem>
 									<template v-if="user.loading">
 										<LoadingSpinner />
@@ -137,7 +134,6 @@ const navLinks = ref([
 	{ label: "My Projects", path: "/projects" },
 	{ label: "Find Collaborators", path: "/collaborators" },
 	{ label: "Messages", path: "/messages" },
-	{ label: "Profile", path: "/profile" },
 ]);
 
 // State to manage mobile menu visibility

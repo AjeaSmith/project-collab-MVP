@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { account } from "~/appwrite";
 import {
 	createUserAccount,
+	editProfile,
 	getAllUsers,
 	getCurrentUser,
 	signInAccount,
@@ -74,12 +75,25 @@ export const useUserStore = defineStore("user", () => {
 		navigateTo("/");
 	};
 
+	const updateProfile = async (data) => {
+		loading.value = true;
+		try {
+			await editProfile(data);
+			loading.value = false;
+			// navigate to profile
+		} catch (err) {
+			console.log("UPDATE PROFILE:", err);
+			throw err;
+		} finally {
+		}
+	};
 	const fetchCurrentUser = async () => {
 		try {
 			const currentUser = await getCurrentUser();
 			current.value = currentUser;
 		} catch (err) {
 			console.error("Failed to fetch session:", err);
+			throw err;
 		}
 	};
 
@@ -103,6 +117,7 @@ export const useUserStore = defineStore("user", () => {
 		error,
 		loading,
 		isAuthenticated,
+		updateProfile,
 		fetchCurrentUser,
 		fetchAllUsers,
 		login,
