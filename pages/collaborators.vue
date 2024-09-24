@@ -73,7 +73,7 @@
 					<b>Availability:</b> {{ collaborator.availability }}
 				</p>
 				<router-link
-					:to="`/project/${collaborator.$id}`"
+					:to="`/profile/${collaborator.name}/${collaborator.accountId}`"
 					class="text-blue-500 hover:underline"
 				>
 					View Profile
@@ -111,6 +111,7 @@ onMounted(async () => {
 	try {
 		await user.fetchCurrentUser();
 		collaborators.value = await user.fetchAllUsers();
+		console.log(collaborators.value);
 	} finally {
 		isLoading.value = false;
 	}

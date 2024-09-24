@@ -5,6 +5,7 @@ import {
 	editProfile,
 	getAllUsers,
 	getCurrentUser,
+	getUserById,
 	signInAccount,
 } from "~/lib/appwrite/api";
 
@@ -87,6 +88,17 @@ export const useUserStore = defineStore("user", () => {
 		} finally {
 		}
 	};
+
+	const fetchUserId = async (userId) => {
+		try {
+			const user = await getUserById(userId);
+			return user;
+		} catch (err) {
+			console.log("Fetching user by id", err);
+			throw err;
+		}
+	};
+
 	const fetchCurrentUser = async () => {
 		try {
 			const currentUser = await getCurrentUser();
@@ -118,6 +130,7 @@ export const useUserStore = defineStore("user", () => {
 		loading,
 		isAuthenticated,
 		updateProfile,
+		fetchUserId,
 		fetchCurrentUser,
 		fetchAllUsers,
 		login,
